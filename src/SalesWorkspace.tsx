@@ -117,7 +117,7 @@ export default function SalesWorkspace({session,role,language,leads,onRefresh}:{
  async function savePlaybook(){if(!supabase||!owner)return;await action(async()=>{const {error}=await supabase!.from('sales_industry_playbooks').insert({industry:playbookIndustry,language:language,approved_questions:playbookQuestions,approved_objections:playbookObjections,meeting_angle:playbookAngle,status:'published',created_by:session.user.id});if(error)throw error;setFeedback('Approved industry playbook saved');setPlaybookQuestions('');setPlaybookObjections('');setPlaybookAngle('');await load();})}
  async function saveScript(publish=false){
   if(!supabase||!owner||!title.trim()||!body.trim())throw Error('Title and script text are required');
-  const status=publish?'published':scriptStatus;
+  const status=publish?'published':'draft';
   if(publish&&scripts.some(x=>x.id!==editing?.id&&x.service===service&&x.language===scriptLanguage&&x.is_default&&x.status==='published')) {
    // Do not select a second default for the same service and language
   }
