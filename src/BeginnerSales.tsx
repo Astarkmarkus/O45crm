@@ -77,7 +77,8 @@ export default function BeginnerSales({session,role,language,leads,onRefresh}:{s
   e.preventDefault();if(!supabase||!lead||!outcome||saving||lastSaved)return;
   if(outcome==='Call Back'&&(!followup||new Date(followup).getTime()<=Date.now())){setError(L.date+' required');return}
   if(outcome==='Meeting Requested'&&meetingFormat==='In person'&&!meetingLocation.trim()){setError('Meeting location required');return}
-  if(outcome==='Meeting Requested'&&slotState!=='free'){setError(language==='sv'?'Välj en ledig mötestid.':'Choose an available meeting time.');return}\n  if(outcome==='Meeting Requested'&&!meetDate){setError('Meeting date and time required');return}
+  if(outcome==='Meeting Requested'&&slotState!=='free'){setError(language==='sv'?'Välj en ledig mötestid.':'Choose an available meeting time.');return}
+  if(outcome==='Meeting Requested'&&!meetDate){setError('Meeting date and time required');return}
   if(outcome==='Do Not Contact'&&!window.confirm(language==='sv'?'Bekräfta att prospektet inte får kontaktas igen?':'Confirm that this prospect should not be contacted again?'))return;
   setSaving(true);setError('');setSuccess('');
   try{
