@@ -103,3 +103,23 @@ input:not([type=checkbox]),select,textarea{border-radius:9px}
 
 /* Meeting calendar navigation – clear controls and month selection */
 .calendar-jump{display:inline-flex;align-items:center;gap:8px;color:#aeb7c2;font-size:12px}.calendar-jump input[type=month]{padding:9px;border:1px solid #414b54;background:#151b22;color:#f5f7fa;border-radius:9px;max-width:180px}.panel-top>.actions{display:flex;flex-wrap:wrap;align-items:center;gap:8px}.panel-top>.actions button{white-space:nowrap}.day.current{border-color:#b1ff69;background:#1d2b1a}.day.current>strong{color:#b1ff69}@media(max-width:650px){.calendar-jump{width:100%}.calendar-jump input[type=month]{flex:1}}
+
+/* ONYX45 weekly planning, responsive and accessible */
+.calendar-view-switch{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:17px 0}
+.calendar-view-switch>button,.week-controls button{background:#1b2026;color:#e5e9ed;border:1px solid #404954;border-radius:9px;padding:10px 15px;cursor:pointer}
+.calendar-view-switch>button.active{background:#283a25;border-color:#b1ff69;color:#b1ff69}
+.calendar-view-switch>label{display:flex;align-items:center;gap:9px;color:#acb8c4;font-size:13px;margin-left:auto}
+.calendar-view-switch select{background:#151b22;color:#f5f7fa;border:1px solid #44515d;border-radius:8px;padding:10px}
+.week-controls{display:flex;align-items:center;justify-content:center;gap:10px;margin:14px 0 18px}
+.week-controls strong{min-width:170px;text-align:center}
+.week-scroll{overflow-x:auto;max-width:100%}
+.week-grid{display:grid;grid-template-columns:58px repeat(7,minmax(118px,1fr));min-width:885px;border:1px solid #303a44;border-radius:12px;overflow:hidden}
+.week-day-label,.week-hour,.week-corner{background:#191e25;color:#cbd5df;padding:11px;text-align:center;border-bottom:1px solid #303a44}
+.week-day-label.today{color:#b1ff69;background:#253220}
+.week-hour-row{display:contents}
+.week-hour{font-size:12px;padding:12px 6px;border-bottom:1px solid #303a44}
+.week-slot{min-height:59px;padding:5px;border-left:1px solid #303a44;border-bottom:1px solid #303a44}
+.week-event{display:flex;flex-direction:column;gap:4px;text-align:left;background:#283b28;color:#ddffcb;border:1px solid #729c55;border-radius:7px;font-size:12px;padding:7px;width:100%;overflow-wrap:anywhere}
+.week-event small{color:#c0dcb1}
+.agenda-panel .meetingrow{border-bottom:1px solid #303a44}
+@media(max-width:650px){.calendar-view-switch>label{margin-left:0;width:100%}.week-controls{gap:6px}.week-controls button{padding:9px}}
