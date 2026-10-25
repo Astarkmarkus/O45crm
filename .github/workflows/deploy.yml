@@ -22,6 +22,16 @@ jobs:
         with:
           node-version: '22'
       - run: npm install
+      - name: Validate Supabase configuration
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+        run: |
+          if [ -z "$VITE_SUPABASE_URL" ]; then echo 'ERROR: VITE_SUPABASE_URL is missing or empty'; exit 1; fi
+          if [ -z "$VITE_SUPABASE_ANON_KEY" ]; then echo 'ERROR: VITE_SUPABASE_ANON_KEY is missing or empty'; exit 1; fi
+          if [[ "$VITE_SUPABASE_URL" != https://*.supabase.co* ]]; then echo 'ERROR: VITE_SUPABASE_URL is not a valid Supabase https URL'; exit 1; fi
+          if [[ "$VITE_SUPABASE_ANON_KEY" != sb_publishable_* && "$VITE_SUPABASE_ANON_KEY" != eyJ* ]]; then echo 'ERROR: VITE_SUPABASE_ANON_KEY is not a publishable or anon key'; exit 1; fi
+          echo 'Supabase configuration format checks passed (values hidden).'
       - run: npm run build
         env:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
