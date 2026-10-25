@@ -1,0 +1,108 @@
+import {useEffect,useMemo,useState,type FormEvent} from 'react';
+import type {Session} from '@supabase/supabase-js';
+import {supabase} from './supabase';
+import './beginner-sales.css';
+type Row={id:string;[key:string]:unknown};
+type Lang='en'|'sv';
+const str=(x:unknown)=>String(x??'');
+const labels={
+ en:{home:'My Sales Day',prospects:'My Prospects',meetings:'My Meetings',followups:'Follow-Ups',next:'Call Next Prospect',save:'Save Outcome',done:'Next Prospect',noanswer:'No Answer',callback:'Call Back',interested:'Interested',book:'Book Meeting',not:'Not Interested',stop:'Do Not Contact',notes:'Call notes',date:'Follow-up date',request:'Request meeting',more:'Call guidance',onboard:'1. Open a prospect. 2. Read the script. 3. Save an outcome. 4. Continue.',empty:'No eligible prospects assigned to you.',saved:'Outcome saved.',pending:'Meeting request saved for Owner review — not confirmed.',today:'Today’s follow-ups',upcoming:'Upcoming meetings',assigned:'Assigned prospects'},
+ sv:{home:'Min säljdag',prospects:'Mina prospekt',meetings:'Mina möten',followups:'Uppföljningar',next:'Ring nästa prospekt',save:'Spara resultat',done:'Nästa prospekt',noanswer:'Inget svar',callback:'Ring tillbaka',interested:'Intresserad',book:'Boka möte',not:'Inte intresserad',stop:'Kontakta inte',notes:'Samtalsanteckningar',date:'Datum för uppföljning',request:'Skicka mötesförfrågan',more:'Samtalsstöd',onboard:'1. Öppna ett prospekt. 2. Läs manuset. 3. Spara resultatet. 4. Fortsätt.',empty:'Du har inga tilldelade prospekt att ringa.',saved:'Resultatet är sparat.',pending:'Mötesförfrågan sparad för Owner att granska – ännu inte bekräftad.',today:'Dagens uppföljningar',upcoming:'Kommande möten',assigned:'Tilldelade prospekt'}
+};
+const replaceApproved=(source:string,lead:Row,seller:string)=>source.replace(/{{([a-z_]+)}}/g,(all,key)=>{
+ const fields:Record<string,string>={company_name:str(lead.company_name),contact_name:str(lead.name),industry:str(lead.industry),contact_role:str(lead.contact_role),service_name:str(lead.service),market:str(lead.market),business_need:str(lead.business_need),seller_name:seller};
+ return Object.prototype.hasOwnProperty.call(fields,key)?fields[key]||'[not provided]':all;
+});
+export default function BeginnerSales({session,language,leads,onRefresh}:{session:Session;language:Lang;leads:Row[];onRefresh:()=>Promise<void>}){
+ const L=labels[language],uid=session.user.id;
+ const [page,setPage]=useState<'day'|'prospects'|'meetings'|'followups'>('day');
+ const [selected,setSelected]=useState(''),[completed,setCompleted]=useState<string[]>([]);
+ const [scripts,setScripts]=useState<Row[]>([]),[playbooks,setPlaybooks]=useState<Row[]>([]),[blocked,setBlocked]=useState<string[]>([]),[meetings,setMeetings]=useState<Row[]>([]),[callLogs,setCallLogs]=useState<Row[]>([]);
+ const [loading,setLoading]=useState(true),[saving,setSaving]=useState(false),[error,setError]=useState(''),[success,setSuccess]=useState(''),[intro,setIntro]=useState(()=>localStorage.getItem('o45_sales_intro')!=='done');
+ const [outcome,setOutcome]=useState(''),[notes,setNotes]=useState(''),[followup,setFollowup]=useState(''),[meetDate,setMeetDate]=useState(''),[purpose,setPurpose]=useState('Introductory call'),[timezone,setTimezone]=useState('Europe/Stockholm');
+ const today=new Date().toLocaleDateString('sv-SE',{timeZone:'Europe/Stockholm'});
+ const available=useMemo(()=>leads.filter(x=>(x.owner_id===uid||x.assigned_to===uid)&&!blocked.includes(x.id)&&!completed.includes(x.id)&&!['Won','Lost'].includes(str(x.stage))),[leads,uid,blocked,completed]);
+ const lead=available.find(x=>x.id===selected);
+ const matching=scripts.find(x=>x.status==='published'&&x.language===language&&x.service===lead?.service&&x.is_default)
+ ||scripts.find(x=>x.status==='published'&&x.language===language&&x.service===lead?.service)
+ ||null;
+ const playbook=playbooks.find(x=>x.status==='published'&&x.language===language&&x.industry===lead?.industry);
+ const script=lead&&matching?replaceApproved(str(matching.body),lead,str(session.user.email).split('@')[0]):'';
+ const due=available.filter(x=>x.next_follow_up&&str(x.next_follow_up)<=today);
+ const upcoming=meetings.filter(x=>x.starts_at&&new Date(str(x.starts_at)).getTime()>=Date.now()&&x.status!=='Cancelled').sort((a,b)=>str(a.starts_at).localeCompare(str(b.starts_at)));
+ const [lastSaved,setLastSaved]=useState(false);
+ async function reload(){
+  if(!supabase)return;
+  setLoading(true);setError('');
+  const [a,b,c,d,e]=await Promise.all([
+   supabase.from('sales_scripts').select('id,service,language,status,body,is_default,version').eq('status','published'),
+   supabase.from('sales_industry_playbooks').select('industry,language,status,approved_questions,approved_objections,meeting_angle').eq('status','published'),
+   supabase.from('sales_suppressions').select('lead_id'),
+   supabase.from('meetings').select('id,title,starts_at,status,meeting_url').order('starts_at',{ascending:true}).limit(100),
+   supabase.from('sales_call_logs').select('id,lead_id,outcome,created_at').eq('seller_id',uid).order('created_at',{ascending:false}).limit(100)
+  ]);
+  const err=[a,b,c,d,e].find(x=>x.error)?.error;
+  if(err)setError(err.message);
+  else{setScripts((a.data||[]) as Row[]);setPlaybooks((b.data||[]) as Row[]);setBlocked((c.data||[]).map(x=>str(x.lead_id)));setMeetings((d.data||[]) as Row[]);setCallLogs((e.data||[]) as Row[]);}
+  setLoading(false);
+ }
+ useEffect(()=>{void reload()},[uid]);
+ function open(row:Row){setSelected(row.id);setPage('prospects');setOutcome('');setNotes('');setFollowup('');setMeetDate('');setSuccess('');setError('');setLastSaved(false);}
+ function next(){const candidate=available.find(x=>x.id!==selected);if(candidate)open(candidate);else{setSelected('');setPage('day');setSuccess('');setLastSaved(false)}}
+ async function save(e:FormEvent){
+  e.preventDefault();if(!supabase||!lead||!outcome||saving||lastSaved)return;
+  if(outcome==='Call Back'&&!followup){setError(L.date+' required');return}
+  if(outcome==='Meeting Requested'&&!meetDate){setError('Meeting date and time required');return}
+  if(outcome==='Do Not Contact'&&!window.confirm(language==='sv'?'Bekräfta att prospektet inte får kontaktas igen?':'Confirm that this prospect should not be contacted again?'))return;
+  setSaving(true);setError('');setSuccess('');
+  try{
+   const savedLeadId=lead.id;
+   if(outcome==='Meeting Requested'){
+    const {error:meetingError}=await supabase.from('sales_meeting_requests').insert({lead_id:savedLeadId,requested_by:uid,proposed_at:new Date(meetDate).toISOString(),timezone,purpose,notes,status:'requested'});
+    if(meetingError)throw meetingError;
+   }
+   const {error:logError}=await supabase.from('sales_call_logs').insert({lead_id:savedLeadId,seller_id:uid,script_id:matching?.id||null,script_version:matching?.version||null,outcome,notes,next_follow_up:followup||null});
+   if(logError)throw logError;
+   if(outcome==='Do Not Contact'){
+    const {error:blockedError}=await supabase.from('sales_suppressions').upsert({lead_id:savedLeadId,created_by:uid,reason:'Do Not Contact'});
+    if(blockedError)throw blockedError;
+   }
+   const stage=outcome==='Call Back'?'Follow-Up':outcome==='Interested'?'Interested':outcome==='Not Interested'?'Lost':outcome==='Meeting Requested'?'Meeting Booked':null;
+   if(stage||followup){
+    const {error:updateError}=await supabase.from('leads').update({...stage?{stage}:{},next_follow_up:followup||null}).eq('id',savedLeadId);
+    if(updateError)throw updateError;
+   }
+   if(outcome==='Call Back'){
+    const {error:taskError}=await supabase.from('tasks').insert({title:'Call back: '+str(lead.company_name),details:notes||'Follow up',due_date:followup,created_by:uid,assigned_to:uid,status:'To Do',priority:'Medium'});
+    if(taskError)throw taskError;
+   }
+   setCompleted(ids=>ids.includes(savedLeadId)?ids:[...ids,savedLeadId]);
+   if(outcome==='Do Not Contact')setBlocked(ids=>ids.includes(savedLeadId)?ids:[...ids,savedLeadId]);
+   setLastSaved(true);setSuccess(outcome==='Meeting Requested'?L.pending:L.saved);
+   await onRefresh();await reload();
+  }catch(err){setError(err instanceof Error?err.message:'Save failed — review the records before retrying.')}finally{setSaving(false)}
+ }
+ const buttons:[string,string][]=[['No Answer',L.noanswer],['Call Back',L.callback],['Interested',L.interested],['Meeting Requested',L.book],['Not Interested',L.not]];
+ return <div className="bs-root">
+  <header className="bs-header"><div><small>ONYX45 / SALES</small><h2>{L.home}</h2><p>{language==='sv'?'Boka möten, utan krångliga verktyg.':'Book meetings without complicated tools.'}</p></div><button className="secondary" disabled={loading} onClick={()=>void reload()}>↻ {language==='sv'?'Uppdatera':'Refresh'}</button></header>
+  <nav className="bs-navigation" aria-label="Sales views">{([['day',L.home],['prospects',L.prospects],['meetings',L.meetings],['followups',L.followups]] as const).map(([key,label])=><button key={key} className={page===key?'active':''} onClick={()=>{setPage(key);if(key!=='prospects')setSelected('')}}>{label}</button>)}</nav>
+  {intro&&<div className="bs-onboard"><div><strong>{language==='sv'?'Välkommen! Så börjar du':'Welcome! Here is how to start'}</strong><p>{L.onboard}</p></div><button onClick={()=>{localStorage.setItem('o45_sales_intro','done');setIntro(false)}}>{language==='sv'?'Jag förstår':'Got it'}</button></div>}
+  {error&&<p className="bs-error" role="alert">{error}</p>}
+  {success&&<p className="bs-success" role="status">{success}</p>}
+  {loading?<div className="bs-empty" role="status">{language==='sv'?'Hämtar dina prospekt…':'Loading your prospects…'}</div>:
+  page==='day'?<><div className="bs-stats"><div><small>{L.today}</small><strong>{due.length}</strong></div><div><small>{L.assigned}</small><strong>{available.length}</strong></div><div><small>{L.upcoming}</small><strong>{upcoming.length}</strong></div></div><button className="bs-hero-action" disabled={!available.length} onClick={()=>available.length&&open(due[0]||available[0])}>{L.next} →</button>{!available.length&&<p className="bs-empty">{L.empty}</p>}<section className="bs-summary"><h3>{L.today}</h3>{due.length?due.slice(0,5).map(x=><button key={x.id} onClick={()=>open(x)}>{str(x.company_name)} <span>{str(x.next_follow_up)}</span></button>):<p>{language==='sv'?'Inga uppföljningar i dag.':'Nothing due today.'}</p>}</section></>:
+  page==='meetings'?<section className="bs-summary"><h3>{L.upcoming}</h3>{upcoming.length?upcoming.map(m=><div key={m.id} className="bs-meeting"><strong>{str(m.title)}</strong><span>{new Date(str(m.starts_at)).toLocaleString(language==='sv'?'sv-SE':'en-GB')}</span>{str(m.meeting_url).startsWith('https://')&&<a target="_blank" rel="noopener noreferrer" href={str(m.meeting_url)}>Join meeting</a>}</div>):<p>{language==='sv'?'Inga kommande möten.':'No upcoming meetings.'}</p>}</section>:
+  page==='followups'?<section className="bs-summary"><h3>{L.followups}</h3>{available.filter(x=>x.next_follow_up).sort((a,b)=>str(a.next_follow_up).localeCompare(str(b.next_follow_up))).map(x=><button key={x.id} onClick={()=>open(x)}>{str(x.company_name)} <span>{str(x.next_follow_up)}</span></button>)}</section>:
+  !lead?<section className="bs-summary"><div className="bs-heading"><h3>{L.prospects}</h3><button className="bs-main-button" disabled={!available.length} onClick={()=>available.length&&open(due[0]||available[0])}>{L.next}</button></div>{available.length?available.map(x=><button key={x.id} onClick={()=>open(x)}><span><strong>{str(x.company_name)}</strong><small>{str(x.name)} · {str(x.service)}</small></span><span>→</span></button>):<p>{L.empty}</p>}</section>:
+  <div className="bs-call">
+   <div className="bs-prospect-head"><div><button className="bs-back" onClick={()=>{setSelected('');setSuccess('');setLastSaved(false)}}>← {L.prospects}</button><h3>{str(lead.company_name)}</h3><p>{str(lead.name)||'Contact not set'} · {str(lead.contact_role)||'Role not set'}</p><p>{str(lead.industry)||'Industry not set'} · {str(lead.service)}</p>{lead.phone&&<a href={'tel:'+str(lead.phone)}>{str(lead.phone)}</a>}</div>{lead.phone&&<a className="bs-call-button" href={'tel:'+str(lead.phone)}>{language==='sv'?'Ring':'Call'} ↗</a>}</div>
+   <div className="bs-work-columns"><section className="bs-script-panel"><h4>{language==='sv'?'Ditt samtalsmanus':'Your calling script'}</h4>{matching?<><div className="bs-script">{script}</div><button onClick={()=>void navigator.clipboard.writeText(script)}>{language==='sv'?'Kopiera manus':'Copy script'}</button></>:<p className="bs-empty">{language==='sv'?'Inget publicerat manus matchar tjänsten och språket. Be Owner publicera ett manus innan du ringer.':'No approved script matches this service and language. Ask Owner to publish one before calling.'}</p>}
+   <details><summary>{language==='sv'?'Behovsfrågor':'Discovery questions'}</summary><p>{str(playbook?.approved_questions)||'Use the approved script.'}</p></details><details><summary>{language==='sv'?'Invändningar':'Common objections'}</summary><p>{str(playbook?.approved_objections)||'Use the approved script.'}</p></details><details><summary>{language==='sv'?'Mötesfråga':'Meeting booking wording'}</summary><p>{str(playbook?.meeting_angle)||'Refer to the approved meeting request wording in your script.'}</p></details></section>
+   <section className="bs-outcome-panel"><h4>{language==='sv'?'Hur gick samtalet?':'How did the call go?'}</h4>{lastSaved?<><p className="bs-success">{success||L.saved}</p><button className="bs-hero-action" onClick={next}>{L.done} →</button></>:<form onSubmit={e=>void save(e)}><div className="bs-outcomes">{buttons.map(([key,label])=><button type="button" aria-pressed={outcome===key} className={outcome===key?'chosen':''} key={key} onClick={()=>{setOutcome(key);setError('')}}>{label}</button>)}</div><button className="bs-dnc" type="button" aria-pressed={outcome==='Do Not Contact'} onClick={()=>setOutcome('Do Not Contact')}>{L.stop}</button>
+   {outcome==='Call Back'&&<label>{L.date}<input type="date" required value={followup} onChange={e=>setFollowup(e.target.value)}/></label>}
+   {outcome==='Meeting Requested'&&<><label>{language==='sv'?'Föreslagen mötestid':'Proposed meeting time'}<input type="datetime-local" required value={meetDate} onChange={e=>setMeetDate(e.target.value)}/></label><label>{language==='sv'?'Syfte':'Purpose'}<input value={purpose} onChange={e=>setPurpose(e.target.value)}/></label><label>{language==='sv'?'Tidszon':'Time zone'}<input value={timezone} onChange={e=>setTimezone(e.target.value)}/></label><p className="bs-hint">{language==='sv'?'Ägaren måste godkänna mötet först.':'Owner must approve the meeting first.'}</p></>}
+   <label>{L.notes}<textarea value={notes} rows={4} onChange={e=>setNotes(e.target.value)} placeholder={language==='sv'?'Kort sammanfattning':'Short summary'}/></label><button className="bs-hero-action" type="submit" disabled={!matching||!outcome||saving}>{saving?'Saving…':L.save}</button></form>}
+   <details><summary>{language==='sv'?'Senaste aktiviteter':'Recent interactions'}</summary>{callLogs.filter(x=>x.lead_id===lead.id).slice(0,8).map(x=><p key={x.id}>{str(x.outcome)} · {new Date(str(x.created_at)).toLocaleString()}</p>)}</details>
+   </section></div></div>}
+ </div>;
+}
