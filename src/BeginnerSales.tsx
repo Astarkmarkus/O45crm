@@ -66,7 +66,8 @@ export default function BeginnerSales({session,language,leads,onRefresh}:{sessio
  async function save(e:FormEvent){
   e.preventDefault();if(!supabase||!lead||!outcome||saving||lastSaved)return;
   if(outcome==='Call Back'&&!followup){setError(L.date+' required');return}
-  if(outcome==='Meeting Requested'&&meetingFormat==='In person'&&!meetingLocation.trim()){setError('Meeting location required');return}\n  if(outcome==='Meeting Requested'&&!meetDate){setError('Meeting date and time required');return}
+  if(outcome==='Meeting Requested'&&meetingFormat==='In person'&&!meetingLocation.trim()){setError('Meeting location required');return}
+  if(outcome==='Meeting Requested'&&!meetDate){setError('Meeting date and time required');return}
   if(outcome==='Do Not Contact'&&!window.confirm(language==='sv'?'Bekräfta att prospektet inte får kontaktas igen?':'Confirm that this prospect should not be contacted again?'))return;
   setSaving(true);setError('');setSuccess('');
   try{
