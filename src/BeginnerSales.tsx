@@ -25,7 +25,7 @@ export default function BeginnerSales({session,role,language,leads,onRefresh}:{s
  const eligible=useMemo(()=>leads.filter(x=>{
  const dueDate=str(x.next_follow_up);
  const handledToday=callLogs.some(log=>log.lead_id===x.id&&new Date(str(log.created_at)).toLocaleDateString('sv-SE',{timeZone:'Europe/Stockholm'})===new Date().toLocaleDateString('sv-SE',{timeZone:'Europe/Stockholm'}));
- return (role==='owner'||x.owner_id===uid||x.assigned_to===uid)&&!blocked.includes(x.id)&&!completed.includes(x.id)&&!['Won','Lost'].includes(str(x.stage))&&(!dueDate||dueDate<=new Date().toLocaleDateString('sv-SE',{timeZone:'Europe/Stockholm'}))&&!handledToday;
+ return (role==='owner'||x.owner_id===uid||x.assigned_to===uid||(Array.isArray(x.assigned_roles)&&x.assigned_roles.includes(role)))&&!blocked.includes(x.id)&&!completed.includes(x.id)&&!['Won','Lost'].includes(str(x.stage))&&(!dueDate||dueDate<=new Date().toLocaleDateString('sv-SE',{timeZone:'Europe/Stockholm'}))&&!handledToday;
  }),[leads,role,uid,blocked,completed,callLogs]);
  const priority=(x:Row)=>({High:0,Medium:1,Low:2}[str(x.priority) as 'High'|'Medium'|'Low']??3);
  const available=useMemo(()=>[...eligible].sort((a,b)=>{
@@ -37,7 +37,7 @@ export default function BeginnerSales({session,role,language,leads,onRefresh}:{s
  const queue=available.filter(x=>!skipped.includes(x.id));
  const drawerLeads=queue.filter(x=>(queueFilter==='all'||(queueFilter==='followup'&&Boolean(x.next_follow_up))||(queueFilter==='high'&&x.priority==='High'))&&[x.company_name,x.name,x.service].some(y=>str(y).toLowerCase().includes(queueSearch.toLowerCase())));
  useEffect(()=>{if(!queueOpen)return;const esc=(e:KeyboardEvent)=>{if(e.key==='Escape')setQueueOpen(false)};window.addEventListener('keydown',esc);return()=>window.removeEventListener('keydown',esc)},[queueOpen]);
- const lead=leads.find(x=>x.id===selected&&(role==='owner'||x.owner_id===uid||x.assigned_to===uid));
+ const lead=leads.find(x=>x.id===selected&&(role==='owner'||x.owner_id===uid||x.assigned_to===uid||(Array.isArray(x.assigned_roles)&&x.assigned_roles.includes(role))));
  const matching=scripts.find(x=>x.status==='published'&&x.language===language&&x.service===lead?.service&&x.is_default)
  ||scripts.find(x=>x.status==='published'&&x.language===language&&x.service===lead?.service)
  ||null;
