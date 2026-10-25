@@ -127,3 +127,5 @@ input:not([type=checkbox]),select,textarea{border-radius:9px}
 .agenda-reminders{background:#202b20;border:1px solid #536d43;border-radius:12px;padding:16px;margin-bottom:18px}.agenda-reminders h3{margin:0 0 10px;font-size:15px}.agenda-reminders p{margin:8px 0;color:#e4f4da;font-size:13px}.agenda-reminders small{color:#b6c9b2;font-size:11px}
 
 .remove-team-member{margin-left:10px;background:transparent;border:1px solid #944c53;color:#ffb8be;border-radius:8px;padding:9px 12px;cursor:pointer;font-size:12px;font-weight:600}.remove-team-member:hover{background:#452126}.remove-team-member:disabled{opacity:.55;cursor:not-allowed}
+
+.lead-role-choices{border:1px solid #35414b;background:#171c22;padding:13px;border-radius:10px;display:grid;gap:11px}.lead-role-option{display:flex!important;align-items:center;gap:10px;font-size:14px}.lead-role-option input{width:17px;height:17px;accent-color:#b1ff69}
