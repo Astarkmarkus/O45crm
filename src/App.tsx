@@ -51,7 +51,7 @@ const today=new Date();const monthStart=new Date(Number(calendarMonth.slice(0,4)
 const monthTitle=new Intl.DateTimeFormat(locale==='sv'?'sv-SE':'en-GB',{month:'long',year:'numeric'}).format(monthStart);
 const daysInMonth=new Date(monthStart.getFullYear(),monthStart.getMonth()+1,0).getDate();
 const calendarOffset=(monthStart.getDay()+6)%7;
-const filteredMeetings=meetings.filter(m=>role==='sales_partner'?(m.assigned_to===session?.user.id||m.owner_id===session?.user.id):role==='owner'&&calendarOwner!=='all'?(m.assigned_to===calendarOwner||m.owner_id===calendarOwner):true);
+const filteredMeetings=meetings.filter(m=>role==='sales_partner'?(m.assigned_to===session?.user.id||m.owner_id===session?.user.id):role==='owner'&&calendarOwner!=='all'?(m.assigned_to===calendarOwner||(!m.assigned_to&&m.owner_id===calendarOwner)):true);
 const weekStart=new Date(calendarWeek.getFullYear(),calendarWeek.getMonth(),calendarWeek.getDate());weekStart.setDate(weekStart.getDate()-(weekStart.getDay()+6)%7);weekStart.setHours(0,0,0,0);
 const weekDays=Array.from({length:7},(_,i)=>{const d=new Date(weekStart);d.setDate(d.getDate()+i);return d});
 const dateKey=(d:Date)=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
