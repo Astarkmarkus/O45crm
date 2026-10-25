@@ -2,6 +2,7 @@ import {useEffect,useMemo,useState,type FormEvent} from 'react';
 import {supabase} from './supabase';
 import type {Session} from '@supabase/supabase-js';
 import './sales.css';
+import {industryCategory,industryCategories} from './industry';
 type R={id:string;[key:string]:unknown};
 type Lang='en'|'sv';
 const v=(x:unknown)=>String(x??'');
@@ -79,7 +80,7 @@ function interpolate(template:string,data:Record<string,string>){
 }
 function safeMailto(email:string,subject:string,body:string){return 'mailto:'+encodeURIComponent(email)+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body)}
 export default function SalesWorkspace({session,role,language,leads,onRefresh}:{session:Session;role:string;language:Lang;leads:R[];onRefresh:()=>Promise<void>}){
- const [playbooks,setPlaybooks]=useState<R[]>([]),[playbookIndustry,setPlaybookIndustry]=useState('E-commerce'),[playbookQuestions,setPlaybookQuestions]=useState(''),[playbookObjections,setPlaybookObjections]=useState(''),[playbookAngle,setPlaybookAngle]=useState(''),[scripts,setScripts]=useState<R[]>([]),[logs,setLogs]=useState<R[]>([]),[requests,setRequests]=useState<R[]>([]),[blocked,setBlocked]=useState<R[]>([]);
+ const [editingPlaybook,setEditingPlaybook]=useState<string|null>(null),[playbooks,setPlaybooks]=useState<R[]>([]),[playbookIndustry,setPlaybookIndustry]=useState('E-commerce'),[playbookQuestions,setPlaybookQuestions]=useState(''),[playbookObjections,setPlaybookObjections]=useState(''),[playbookAngle,setPlaybookAngle]=useState(''),[scripts,setScripts]=useState<R[]>([]),[logs,setLogs]=useState<R[]>([]),[requests,setRequests]=useState<R[]>([]),[blocked,setBlocked]=useState<R[]>([]);
  const [selected,setSelected]=useState(''),[scriptId,setScriptId]=useState(''),[tab,setTab]=useState<'prospects'|'scripts'|'requests'>('prospects');
  const [working,setWorking]=useState(false),[feedback,setFeedback]=useState(''),[step,setStep]=useState(0);
  const [notes,setNotes]=useState(''),[outcome,setOutcome]=useState('Call Back'),[followup,setFollowup]=useState('');
@@ -91,7 +92,7 @@ export default function SalesWorkspace({session,role,language,leads,onRefresh}:{
  const chosenScript=useMemo(()=>scripts.find(x=>x.id===scriptId),[scripts,scriptId]);
  const relevant=scripts.filter(x=>x.status==='published'&&x.service===lead?.service&&x.language===language);
  const fallback=scripts.find(x=>x.status==='published'&&x.language===language);
- const approvedPlaybook=playbooks.find(x=>x.industry===lead?.industry&&x.language===language&&x.status==='published');
+ const approvedPlaybook=playbooks.find(x=>x.industry===industryCategory(lead?.industry)&&x.language===language&&x.status==='published');
  const prepared=interpolate(v(chosenScript?.body||fallback?.body|| (language==='sv'?svText:defaultText)),{
  company_name:v(lead?.company_name),contact_name:v(lead?.name),industry:v(lead?.industry),
  contact_role:v(lead?.contact_role),service_name:v(lead?.service),market:v(lead?.market),
@@ -114,7 +115,26 @@ export default function SalesWorkspace({session,role,language,leads,onRefresh}:{
  `Hi ${v(lead.name)||'there'},\n\nThank you for the conversation. We would be happy to discuss how ONYX45 could support ${v(lead.company_name)||'your business'} with ${v(lead.service)||'growth services'}.\n\nIf useful, we can arrange a short introductory meeting.\n\nBest regards,\nONYX45`,
  `Hej ${v(lead.name)||'!'},\n\nTack för samtalet. Vi berättar gärna mer om hur ONYX45 kan hjälpa ${v(lead.company_name)||'ert företag'} med ${v(lead.service)||'tillväxttjänster'}.\n\nOm det passar kan vi boka ett kort introduktionsmöte.\n\nVänliga hälsningar,\nONYX45`))},[selected,language]);
  async function action(fn:()=>Promise<void>){setWorking(true);setFeedback('');try{await fn()}catch(e){setFeedback(e instanceof Error?e.message:'Action failed')}finally{setWorking(false)}}
- async function savePlaybook(){if(!supabase||!owner)return;await action(async()=>{const {error}=await supabase!.from('sales_industry_playbooks').insert({industry:playbookIndustry,language:language,approved_questions:playbookQuestions,approved_objections:playbookObjections,meeting_angle:playbookAngle,status:'published',created_by:session.user.id});if(error)throw error;setFeedback('Approved industry playbook saved');setPlaybookQuestions('');setPlaybookObjections('');setPlaybookAngle('');await load();})}
+ function editPlaybook(row?:R){setEditingPlaybook(row?.id||null);setPlaybookIndustry(v(row?.industry||'E-commerce'));setScriptLanguage((row?.language==='sv'?'sv':'en'));setPlaybookQuestions(v(row?.approved_questions));setPlaybookObjections(v(row?.approved_objections));setPlaybookAngle(v(row?.meeting_angle));}
+ async function savePlaybook(){if(!supabase||!owner)return;await action(async()=>{
+ if(!playbookQuestions.trim()&&!playbookObjections.trim()&&!playbookAngle.trim())throw new Error('Add at least one approved question, objection response or meeting angle.');
+ const payload={industry:playbookIndustry,language:scriptLanguage,approved_questions:playbookQuestions,approved_objections:playbookObjections,meeting_angle:playbookAngle,status:'published',updated_at:new Date().toISOString()};
+ if(editingPlaybook){const {error}=await supabase!.from('sales_industry_playbooks').update(payload).eq('id',editingPlaybook);if(error)throw error;}
+ else{const existing=playbooks.find(x=>x.industry===playbookIndustry&&x.language===scriptLanguage&&x.status==='published');
+ if(existing)throw new Error('A published playbook already exists for this industry and language. Choose Edit instead.');
+ const {error}=await supabase!.from('sales_industry_playbooks').insert({...payload,created_by:session.user.id});if(error)throw error;}
+ setFeedback('Playbook published for '+playbookIndustry+' / '+scriptLanguage);editPlaybook();await load();
+ })}
+ async function archiveScript(row:R){if(!supabase||!owner)return;if(!window.confirm('Remove this script from the active library? Existing call history will be preserved.'))return;await action(async()=>{
+ const {error}=await supabase!.from('sales_scripts').update({status:'archived',is_default:false}).eq('id',row.id);if(error)throw error;
+ if(editing?.id===row.id)editScript();
+ setFeedback('Script removed from active library; call history preserved.');await load();
+ })}
+ async function deleteDraft(row:R){if(!supabase||!owner||row.status!=='draft')return;if(!window.confirm('Permanently delete this unpublished draft?'))return;await action(async()=>{
+ const {error}=await supabase!.from('sales_scripts').delete().eq('id',row.id).eq('status','draft');if(error)throw error;
+ if(editing?.id===row.id)editScript();setFeedback('Draft deleted.');await load();
+ })}
+ async function archivePlaybook(row:R){if(!supabase||!owner||!window.confirm('Archive this industry playbook?'))return;await action(async()=>{const {error}=await supabase!.from('sales_industry_playbooks').update({status:'archived'}).eq('id',row.id);if(error)throw error;editPlaybook();await load();setFeedback('Playbook archived.');})}
  async function saveScript(publish=false){
   if(!supabase||!owner||!title.trim()||!body.trim())throw Error('Title and script text are required');
   const status=publish?'published':'draft';
