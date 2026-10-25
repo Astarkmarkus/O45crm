@@ -1,3 +1,4 @@
+import {industryCategories,industryCategory} from './industry';
 import {useEffect,useState,type FormEvent} from 'react';
 import {supabase,configured,setupError} from './supabase';
 import type {Session} from '@supabase/supabase-js';
@@ -8,7 +9,7 @@ type View='Dashboard'|'Sales Workspace'|'CRM'|'Pipeline'|'Meetings'|'Projects'|'
 type Row={id:string;[key:string]:unknown};
 const stages=['New Prospect','Researching','Contacted','Follow-Up','Interested','Meeting Booked','Meeting Completed','Proposal Sent','Negotiation','Won','Lost'];
 const specs:Record<string,{table:string;fields:string[];choices?:Record<string,string[]>}> = {
- CRM:{table:'leads',fields:['name','company_name','email','phone','contact_role','industry','market','business_need','assigned_to','service','stage','priority','next_follow_up','notes'],choices:{stage:stages,priority:['Low','Medium','High'],service:['Paid Advertising','Lead Generation & Appointment Setting','End-to-End Growth Management']}},
+ CRM:{table:'leads',fields:['name','company_name','email','phone','contact_role','industry','industry_category','market','business_need','assigned_to','service','stage','priority','next_follow_up','notes'],choices:{industry_category:[...industryCategories],stage:stages,priority:['Low','Medium','High'],service:['Paid Advertising','Lead Generation & Appointment Setting','End-to-End Growth Management']}},
  Meetings:{table:'meetings',fields:['title','company_name','starts_at','timezone','meeting_format','meeting_url','location','assigned_to','status'],choices:{meeting_format:['Online','In person'],status:['Requested','Confirmed','Completed','Cancelled','No-Show','Rescheduled']}},
  Projects:{table:'projects',fields:['name','client_name','service','status','scope','start_date','end_date'],choices:{service:['Paid Advertising','Lead Generation & Appointment Setting','End-to-End Growth Management'],status:['Planned','Awaiting Payment','Onboarding','Active','Waiting for Client','At Risk','Completed','Cancelled']}},
  Tasks:{table:'tasks',fields:['title','details','due_date','priority','status','assigned_to'],choices:{priority:['Low','Medium','High'],status:['To Do','In Progress','Done']}}
