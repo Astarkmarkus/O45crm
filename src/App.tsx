@@ -1,4 +1,4 @@
-import {industryCategories,industryCategory} from './industry';
+import {industryCategories} from './industry';
 import {useEffect,useState,type FormEvent} from 'react';
 import {supabase,configured,setupError} from './supabase';
 import type {Session} from '@supabase/supabase-js';
