@@ -22,7 +22,7 @@ export default function BeginnerSales({session,language,leads,onRefresh}:{sessio
  const [outcome,setOutcome]=useState(''),[notes,setNotes]=useState(''),[followup,setFollowup]=useState(''),[meetDate,setMeetDate]=useState(''),[purpose,setPurpose]=useState('Introductory call'),[timezone,setTimezone]=useState('Europe/Stockholm');
  const today=new Date().toLocaleDateString('sv-SE',{timeZone:'Europe/Stockholm'});
  const available=useMemo(()=>leads.filter(x=>(x.owner_id===uid||x.assigned_to===uid)&&!blocked.includes(x.id)&&!completed.includes(x.id)&&!['Won','Lost'].includes(str(x.stage))),[leads,uid,blocked,completed]);
- const lead=available.find(x=>x.id===selected);
+ const lead=leads.find(x=>x.id===selected&&(x.owner_id===uid||x.assigned_to===uid));
  const matching=scripts.find(x=>x.status==='published'&&x.language===language&&x.service===lead?.service&&x.is_default)
  ||scripts.find(x=>x.status==='published'&&x.language===language&&x.service===lead?.service)
  ||null;
