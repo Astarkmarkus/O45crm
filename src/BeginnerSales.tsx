@@ -13,7 +13,7 @@ const replaceApproved=(source:string,lead:Row,seller:string)=>source.replace(/{{
  const fields:Record<string,string>={company_name:str(lead.company_name),contact_name:str(lead.name),industry:str(lead.industry),contact_role:str(lead.contact_role),service_name:str(lead.service),market:str(lead.market),business_need:str(lead.business_need),seller_name:seller};
  return Object.prototype.hasOwnProperty.call(fields,key)?fields[key]||'[not provided]':all;
 });
-export default function BeginnerSales({session,language,leads,onRefresh}:{session:Session;language:Lang;leads:Row[];onRefresh:()=>Promise<void>}){
+export default function BeginnerSales({session,role,language,leads,onRefresh}:{session:Session;role:string;language:Lang;leads:Row[];onRefresh:()=>Promise<void>}){
  const L=labels[language],uid=session.user.id;
  const [page,setPage]=useState<'day'|'prospects'|'meetings'|'followups'>('day');
  const [queueOpen,setQueueOpen]=useState(false),[queueSearch,setQueueSearch]=useState(''),[queueFilter,setQueueFilter]=useState<'all'|'followup'|'high'>('all'),[selected,setSelected]=useState(''),[completed,setCompleted]=useState<string[]>([]),[skipped,setSkipped]=useState<string[]>([]);
@@ -24,8 +24,8 @@ export default function BeginnerSales({session,language,leads,onRefresh}:{sessio
  const eligible=useMemo(()=>leads.filter(x=>{
  const dueDate=str(x.next_follow_up);
  const handledToday=callLogs.some(log=>log.lead_id===x.id&&new Date(str(log.created_at)).toLocaleDateString('sv-SE',{timeZone:'Europe/Stockholm'})===new Date().toLocaleDateString('sv-SE',{timeZone:'Europe/Stockholm'}));
- return (x.owner_id===uid||x.assigned_to===uid)&&!blocked.includes(x.id)&&!completed.includes(x.id)&&!['Won','Lost'].includes(str(x.stage))&&(!dueDate||dueDate<=new Date().toLocaleDateString('sv-SE',{timeZone:'Europe/Stockholm'}))&&!handledToday;
- }),[leads,uid,blocked,completed,callLogs]);
+ return (role==='owner'||x.owner_id===uid||x.assigned_to===uid)&&!blocked.includes(x.id)&&!completed.includes(x.id)&&!['Won','Lost'].includes(str(x.stage))&&(!dueDate||dueDate<=new Date().toLocaleDateString('sv-SE',{timeZone:'Europe/Stockholm'}))&&!handledToday;
+ }),[leads,role,uid,blocked,completed,callLogs]);
  const priority=(x:Row)=>({High:0,Medium:1,Low:2}[str(x.priority) as 'High'|'Medium'|'Low']??3);
  const available=useMemo(()=>[...eligible].sort((a,b)=>{
  const dueA=Boolean(a.next_follow_up),dueB=Boolean(b.next_follow_up);
@@ -36,7 +36,7 @@ export default function BeginnerSales({session,language,leads,onRefresh}:{sessio
  const queue=available.filter(x=>!skipped.includes(x.id));
  const drawerLeads=queue.filter(x=>(queueFilter==='all'||(queueFilter==='followup'&&Boolean(x.next_follow_up))||(queueFilter==='high'&&x.priority==='High'))&&[x.company_name,x.name,x.service].some(y=>str(y).toLowerCase().includes(queueSearch.toLowerCase())));
  useEffect(()=>{if(!queueOpen)return;const esc=(e:KeyboardEvent)=>{if(e.key==='Escape')setQueueOpen(false)};window.addEventListener('keydown',esc);return()=>window.removeEventListener('keydown',esc)},[queueOpen]);
- const lead=leads.find(x=>x.id===selected&&(x.owner_id===uid||x.assigned_to===uid));
+ const lead=leads.find(x=>x.id===selected&&(role==='owner'||x.owner_id===uid||x.assigned_to===uid));
  const matching=scripts.find(x=>x.status==='published'&&x.language===language&&x.service===lead?.service&&x.is_default)
  ||scripts.find(x=>x.status==='published'&&x.language===language&&x.service===lead?.service)
  ||null;
