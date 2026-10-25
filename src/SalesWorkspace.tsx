@@ -84,7 +84,7 @@ export default function SalesWorkspace({session,role,language,leads,onRefresh}:{
  const [working,setWorking]=useState(false),[feedback,setFeedback]=useState(''),[step,setStep]=useState(0);
  const [notes,setNotes]=useState(''),[outcome,setOutcome]=useState('Call Back'),[followup,setFollowup]=useState('');
  const [purpose,setPurpose]=useState('Introductory discussion'),[date,setDate]=useState(''),[timezone,setTimezone]=useState('Europe/Stockholm');
- const [editing,setEditing]=useState<R|null>(null),[service,setService]=useState(services[0]),[scriptLanguage,setScriptLanguage]=useState<Lang>(language),[title,setTitle]=useState(''),[body,setBody]=useState(''),[scriptStatus,setScriptStatus]=useState('draft');
+ const [editing,setEditing]=useState<R|null>(null),[service,setService]=useState(services[0]),[scriptLanguage,setScriptLanguage]=useState<Lang>(language),[title,setTitle]=useState(''),[body,setBody]=useState('');
  const [meetLink,setMeetLink]=useState(''),[emailDraft,setEmailDraft]=useState('');
  const owner=role==='owner',partner=role==='sales_partner';const lead=leads.find(x=>x.id===selected);
  const stopped=blocked.some(x=>x.lead_id===selected);
@@ -127,7 +127,7 @@ export default function SalesWorkspace({session,role,language,leads,onRefresh}:{
   if(publish){const version=Number(editing?.version||1)+(editing?1:0);const {error}=await supabase.from('sales_script_versions').insert({script_id:id,version,body,published_by:session.user.id});if(error)throw error;}
   setEditing(null);setFeedback(publish?'Published and saved':'Draft saved');await load();
  }
- function editScript(row?:R){setEditing(row||null);setTitle(v(row?.title));setBody(v(row?.body|| (language==='sv'?svText:defaultText)));setService(v(row?.service||services[0]));setScriptLanguage(v(row?.language||language) as Lang);setScriptStatus(v(row?.status||'draft'));}
+ function editScript(row?:R){setEditing(row||null);setTitle(v(row?.title));setBody(v(row?.body|| (language==='sv'?svText:defaultText)));setService(v(row?.service||services[0]));setScriptLanguage(v(row?.language||language) as Lang);}
  async function saveOutcome(e:FormEvent){e.preventDefault();if(!supabase||!lead||stopped)return;
  await action(async()=>{
   const {error}=await supabase!.from('sales_call_logs').insert({lead_id:lead.id,seller_id:session.user.id,script_id:chosenScript?.id||null,script_version:chosenScript?.version||null,outcome,notes,next_follow_up:followup||null});if(error)throw error;
