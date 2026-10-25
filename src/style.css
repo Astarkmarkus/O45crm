@@ -123,3 +123,5 @@ input:not([type=checkbox]),select,textarea{border-radius:9px}
 .week-event small{color:#c0dcb1}
 .agenda-panel .meetingrow{border-bottom:1px solid #303a44}
 @media(max-width:650px){.calendar-view-switch>label{margin-left:0;width:100%}.week-controls{gap:6px}.week-controls button{padding:9px}}
+
+.agenda-reminders{background:#202b20;border:1px solid #536d43;border-radius:12px;padding:16px;margin-bottom:18px}.agenda-reminders h3{margin:0 0 10px;font-size:15px}.agenda-reminders p{margin:8px 0;color:#e4f4da;font-size:13px}.agenda-reminders small{color:#b6c9b2;font-size:11px}
