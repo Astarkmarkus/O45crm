@@ -1,6 +1,8 @@
 -- ONYX45 OS operations v3. Apply after 002_operations.sql.
 -- Owner-only delete on projects and financial entries.
+drop policy if exists projects_owner_delete on public.projects;
 create policy projects_owner_delete on public.projects for delete to authenticated using (public.is_owner());
+drop policy if exists finance_owner_delete on public.financial_records;
 create policy finance_owner_delete on public.financial_records for delete to authenticated using (public.is_owner());
 -- Task assignees may mark work done or request an extension.
 alter table public.tasks add column if not exists extension_requested_until date;
