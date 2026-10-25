@@ -22,3 +22,32 @@
 @media(max-width:700px){.calendar{gap:2px}.day{padding:3px;min-height:75px}.day button{font-size:9px;padding:2px}.calendar>b{font-size:9px}}
 
 .danger{background:transparent;border:1px solid #9f5260;color:#ff9eac;border-radius:8px;padding:7px 10px;margin-left:8px}.danger:hover{background:#3a2028}.secondary{background:#26313c;border:1px solid #405063;color:#f5f7fa;padding:10px 14px;border-radius:8px}.drawer input[type=date],.drawer input[type=datetime-local]{color-scheme:dark;cursor:pointer}.drawer input[type=date]::-webkit-calendar-picker-indicator,.drawer input[type=datetime-local]::-webkit-calendar-picker-indicator{cursor:pointer;filter:invert(.8)}
+
+/* Pipeline 2.0: scrolling is contained within the main area, never underneath the sidebar */
+.pipeline-page{min-width:0;max-width:100%;overflow:hidden}
+.pipe-overview{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:20px}
+.pipe-overview>div{background:#1a2029;border:1px solid #343e49;padding:17px;border-radius:12px}
+.pipe-overview small{display:block;font-size:10px;letter-spacing:1px;color:#9ca8b7}
+.pipe-overview strong{display:block;font-size:27px;margin-top:9px;color:#f5f7fa}
+.pipe-toolbar{display:flex;gap:10px;align-items:center;margin-bottom:18px;flex-wrap:wrap}
+.pipe-toolbar input{flex:1;min-width:190px}
+.pipe-toolbar select{width:155px;flex:none}
+.pipeline-scroll{width:100%;min-width:0;overflow-x:auto;overflow-y:hidden;padding-bottom:14px;scrollbar-color:#4c5d67 #11151b}
+.pipeline-board{display:flex;gap:12px;align-items:flex-start;width:max-content;min-width:100%}
+.pipe-lane{width:235px;flex:0 0 235px;min-height:160px;border:1px solid #35414e;background:#192029;border-radius:13px;overflow:hidden}
+.pipe-heading{padding:15px 13px;display:flex;align-items:center;justify-content:space-between;gap:8px;border-bottom:1px solid #303c47;font-weight:700;font-size:12px;white-space:nowrap}
+.pipe-count{min-width:26px;text-align:center;color:#b1ff69;background:#2a392b;border-radius:6px;padding:3px 6px}
+.pipe-cards{padding:10px;display:grid;gap:9px}
+.pipe-card{background:#11161d;border:1px solid #313d48;border-radius:11px;padding:12px}
+.pipe-card-header{display:flex;justify-content:space-between;align-items:flex-start;gap:7px}
+.pipe-card strong{font-size:13px;overflow-wrap:anywhere}
+.pipe-company{color:#d6dde5;font-size:12px;margin:8px 0 3px}
+.pipe-service{font-size:11px;color:#899aaa;margin:4px 0 10px}
+.pipe-follow{color:#c7dfaa;font-size:11px;border-top:1px solid #2d3945;padding-top:10px}
+.pipe-card-actions{display:flex;gap:5px;align-items:center}
+.pipe-card-actions select{padding:8px;min-width:0;flex:1;font-size:11px}
+.pipe-card-actions button{border:1px solid #455362;background:#252e38;color:#e7edf2;border-radius:8px;padding:8px;font-size:11px}
+.pipe-empty{color:#718191;text-align:center;font-size:12px;margin:18px 0}
+.priority{font-size:9px;font-weight:800;text-transform:uppercase;color:#9faaba;border:1px solid #49515a;border-radius:6px;padding:4px 5px}
+.priority.high{color:#ffad98;border-color:#8e534d}.priority.medium{color:#f0d497;border-color:#8b7447}.priority.low{color:#b1ff69;border-color:#548347}
+@media(max-width:850px){.pipe-overview{grid-template-columns:repeat(2,minmax(0,1fr))}.pipe-lane{width:215px;flex-basis:215px}}
