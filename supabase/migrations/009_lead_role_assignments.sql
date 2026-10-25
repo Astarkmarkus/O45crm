@@ -31,7 +31,7 @@ CREATE POLICY leads_update ON public.leads FOR UPDATE TO authenticated USING (pu
 DROP POLICY IF EXISTS sales_calls_insert ON public.sales_call_logs;
 CREATE POLICY sales_calls_insert ON public.sales_call_logs FOR INSERT TO authenticated WITH CHECK (seller_id=auth.uid() AND public.my_role() IN ('owner','sales_partner') AND public.can_access_lead(lead_id));
 DROP POLICY IF EXISTS sales_calls_read ON public.sales_call_logs;
-CREATE POLICY sales_calls_read ON public.sales_call_logs FOR SELECT TO authenticated USING (public.is_owner() OR (seller_id=auth.uid() AND public.can_access_lead(lead_id)));
+CREATE POLICY sales_calls_read ON public.sales_call_logs FOR SELECT TO authenticated USING (public.can_access_lead(lead_id));
 DROP POLICY IF EXISTS sales_requests_insert ON public.sales_meeting_requests;
 CREATE POLICY sales_requests_insert ON public.sales_meeting_requests FOR INSERT TO authenticated WITH CHECK (requested_by=auth.uid() AND public.my_role() IN ('owner','sales_partner') AND public.can_access_lead(lead_id));
 DROP POLICY IF EXISTS sales_suppressions_insert ON public.sales_suppressions;
