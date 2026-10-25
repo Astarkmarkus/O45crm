@@ -100,3 +100,6 @@ input:not([type=checkbox]),select,textarea{border-radius:9px}
 .pulse-progress i{height:100%;display:block;background:#b1ff69;border-radius:5px}
 .sales-pulse-bottom{border-top:1px solid #30363d;margin-top:20px;padding-top:15px}
 @media(max-width:720px){.sales-pulse{padding:15px}.sales-pulse-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.sales-pulse-stages{grid-template-columns:repeat(2,minmax(0,1fr))}.sales-pulse-head,.sales-pulse-bottom{align-items:flex-start;flex-direction:column}}
+
+/* Meeting calendar navigation – clear controls and month selection */
+.calendar-jump{display:inline-flex;align-items:center;gap:8px;color:#aeb7c2;font-size:12px}.calendar-jump input[type=month]{padding:9px;border:1px solid #414b54;background:#151b22;color:#f5f7fa;border-radius:9px;max-width:180px}.panel-top>.actions{display:flex;flex-wrap:wrap;align-items:center;gap:8px}.panel-top>.actions button{white-space:nowrap}.day.current{border-color:#b1ff69;background:#1d2b1a}.day.current>strong{color:#b1ff69}@media(max-width:650px){.calendar-jump{width:100%}.calendar-jump input[type=month]{flex:1}}
