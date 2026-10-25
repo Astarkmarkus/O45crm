@@ -68,3 +68,19 @@
 .pipeline-entry strong{font-size:15px}.pipeline-entry p{font-size:12px;color:#bfc7d0;margin:6px 0}.pipeline-entry small{font-size:11px;color:#b0cf97}.pipeline-entry select{width:100%}
 .pipe-list-empty{text-align:center;color:#97a7b4;padding:38px 15px;background:#1a2029;border:1px dashed #414e59;border-radius:12px}
 @media(max-width:780px){.pipeline-entry{grid-template-columns:minmax(0,1fr) auto}.pipeline-entry select{grid-column:1}.pipe-overview{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* ONYX45 OS minimal visual system — applied consistently across existing workspaces */
+:root{--o45-bg:#0b0d10;--o45-surface:#14171b;--o45-soft:#1b2026;--o45-border:#30363d;--o45-text:#f5f7fa;--o45-muted:#aeb7c2;--o45-accent:#b1ff69}
+body,#root{background:var(--o45-bg);color:var(--o45-text)}
+.panel,.pipe-overview>div,.pipeline-entry,.goal-card,.day,.card,.sidebar,.drawer{box-shadow:none}
+.panel,.pipeline-entry,.pipe-overview>div,.goal-card{background:var(--o45-surface);border-color:var(--o45-border);border-radius:13px}
+button,a,input,select,textarea{transition:background-color .12s ease,border-color .12s ease,color .12s ease}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--o45-accent);outline-offset:2px}
+.panel h2,.panel h3{letter-spacing:-.025em}
+.panel p,.hint,.caption{line-height:1.5}
+input:not([type=checkbox]),select,textarea{border-radius:9px}
+.primary{background:var(--o45-accent);color:#11151b;font-weight:750}
+.secondary{background:#222830;border-color:#3a434e}
+.table-scroll{overflow-x:auto}
+.sidebar{border-right:1px solid var(--o45-border)}
+@media(max-width:800px){.panel{padding:16px}.metrics{gap:9px}.billing{grid-template-columns:1fr}}
