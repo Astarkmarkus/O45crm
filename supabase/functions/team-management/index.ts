@@ -19,6 +19,8 @@ Deno.serve(async(req)=>{
  if(body.action==="invite"){
  const email=String(body.email||"").trim().toLowerCase();
  const role=String(body.role||"");
+ const {data:existing}=await admin.from("profiles").select("id,role").ilike("email",email).maybeSingle();
+ if(existing)return respond(409,{error:existing.role==="disabled"?"This account was previously removed. Contact the Owner to restore access.":"This email already has a CRM account. No new invitation was sent."});
  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)||!validRoles.includes(role))return respond(400,{error:"Valid email and team role required"});
  const {data, error}=await admin.auth.admin.inviteUserByEmail(email,{redirectTo:"https://astarkmarkus.github.io/O45crm/"});
  if(error)return respond(400,{error:error.message});
@@ -26,6 +28,19 @@ Deno.serve(async(req)=>{
  const {error:upErr}=await admin.from("profiles").upsert({id:data.user.id,email,role},{onConflict:"id"});
  if(upErr)return respond(500,{error:"Invitation sent but role assignment failed. Correct role in Supabase before user signs in."});
  return respond(200,{ok:true,message:"Invitation sent"});
+ }
+ if(body.action==="remove_member"){
+ const id=String(body.user_id||"");
+ if(!/^[0-9a-f-]{36}$/i.test(id)||id===user.id)return respond(400,{error:"Invalid user or protected Owner account"});
+ const {data:target,error:targetError}=await admin.from("profiles").select("role,email").eq("id",id).single();
+ if(targetError||!target)return respond(404,{error:"Team member not found"});
+ if(target.role==="owner")return respond(403,{error:"Owner accounts are protected"});
+ if(target.role==="disabled")return respond(200,{ok:true,message:"Access already removed"});
+ const {error:banError}=await admin.auth.admin.updateUserById(id,{ban_duration:"876000h"});
+ if(banError)return respond(500,{error:"Could not disable sign-in: "+banError.message});
+ const {error:disableError}=await admin.from("profiles").update({role:"disabled"}).eq("id",id);
+ if(disableError)return respond(500,{error:"Account sign-in blocked, but team role could not be disabled: "+disableError.message});
+ return respond(200,{ok:true,message:"Team member access removed. Existing CRM history was retained."});
  }
  if(body.action==="change_role"){
  const id=String(body.user_id||""),role=String(body.role||"");
