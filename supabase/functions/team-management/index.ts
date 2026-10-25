@@ -1,5 +1,5 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
-const cors={ "Access-Control-Allow-Origin":"https://astarkmarkus.github.io","Access-Control-Allow-Headers":"authorization, apikey, content-type","Access-Control-Allow-Methods":"POST, OPTIONS","Content-Type":"application/json"};
+const cors={ "Access-Control-Allow-Origin":"https://astarkmarkus.github.io","Access-Control-Allow-Headers":"authorization, apikey, content-type, x-client-info, x-supabase-api-version","Access-Control-Allow-Methods":"POST, OPTIONS","Content-Type":"application/json"};
 const respond=(status:number,body:unknown)=>new Response(JSON.stringify(body),{status,headers:cors});
 Deno.serve(async(req)=>{
  if(req.method==="OPTIONS")return new Response(null,{status:204,headers:cors});
