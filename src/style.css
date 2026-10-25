@@ -20,3 +20,5 @@
 .barrow .track{flex:1;background:#11151b;border-radius:5px;height:12px;overflow:hidden}
 .barrow .bar{height:100%;background:#b1ff69;border-radius:5px}
 @media(max-width:700px){.calendar{gap:2px}.day{padding:3px;min-height:75px}.day button{font-size:9px;padding:2px}.calendar>b{font-size:9px}}
+
+.danger{background:transparent;border:1px solid #9f5260;color:#ff9eac;border-radius:8px;padding:7px 10px;margin-left:8px}.danger:hover{background:#3a2028}.secondary{background:#26313c;border:1px solid #405063;color:#f5f7fa;padding:10px 14px;border-radius:8px}.drawer input[type=date],.drawer input[type=datetime-local]{color-scheme:dark;cursor:pointer}.drawer input[type=date]::-webkit-calendar-picker-indicator,.drawer input[type=datetime-local]::-webkit-calendar-picker-indicator{cursor:pointer;filter:invert(.8)}
