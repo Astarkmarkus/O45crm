@@ -57,25 +57,13 @@ export default function BeginnerSales({session,language,leads,onRefresh}:{sessio
   setSaving(true);setError('');setSuccess('');
   try{
    const savedLeadId=lead.id;
-   if(outcome==='Meeting Requested'){
-    const {error:meetingError}=await supabase.from('sales_meeting_requests').insert({lead_id:savedLeadId,requested_by:uid,proposed_at:new Date(meetDate).toISOString(),timezone,purpose,notes,status:'requested'});
-    if(meetingError)throw meetingError;
-   }
-   const {error:logError}=await supabase.from('sales_call_logs').insert({lead_id:savedLeadId,seller_id:uid,script_id:matching?.id||null,script_version:matching?.version||null,outcome,notes,next_follow_up:followup||null});
-   if(logError)throw logError;
-   if(outcome==='Do Not Contact'){
-    const {error:blockedError}=await supabase.from('sales_suppressions').upsert({lead_id:savedLeadId,created_by:uid,reason:'Do Not Contact'});
-    if(blockedError)throw blockedError;
-   }
-   const stage=outcome==='Call Back'?'Follow-Up':outcome==='Interested'?'Interested':outcome==='Not Interested'?'Lost':outcome==='Meeting Requested'?'Meeting Booked':null;
-   if(stage||followup){
-    const {error:updateError}=await supabase.from('leads').update({...stage?{stage}:{},next_follow_up:followup||null}).eq('id',savedLeadId);
-    if(updateError)throw updateError;
-   }
-   if(outcome==='Call Back'){
-    const {error:taskError}=await supabase.from('tasks').insert({title:'Call back: '+str(lead.company_name),details:notes||'Follow up',due_date:followup,created_by:uid,assigned_to:uid,status:'To Do',priority:'Medium'});
-    if(taskError)throw taskError;
-   }
+   const {error:saveError}=await supabase.rpc('sales_finish_call',{
+    p_lead_id:savedLeadId,p_outcome:outcome,p_notes:notes,p_followup:followup||null,
+    p_meeting_at:outcome==='Meeting Requested'?new Date(meetDate).toISOString():null,
+    p_timezone:timezone,p_purpose:purpose,p_script_id:matching?.id||null,
+    p_script_version:matching?.version||null
+   });
+   if(saveError)throw saveError;
    setCompleted(ids=>ids.includes(savedLeadId)?ids:[...ids,savedLeadId]);
    if(outcome==='Do Not Contact')setBlocked(ids=>ids.includes(savedLeadId)?ids:[...ids,savedLeadId]);
    setLastSaved(true);setSuccess(outcome==='Meeting Requested'?L.pending:L.saved);
