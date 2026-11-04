@@ -1,0 +1,36 @@
+/* ONYX45 / NIGHTDRIVE cockpit – original angular 2000s racing UI direction. */
+.o45-cockpit{display:grid;grid-template-columns:minmax(0,1.17fr) minmax(300px,.83fr);gap:14px;align-items:stretch;margin:14px 0}
+.o45-brief,.o45-notepad{position:relative;min-width:0;background:linear-gradient(130deg,#181d22 0%,#101419 72%);border:1px solid #3c4448;border-left:3px solid #b1ff69;padding:22px 23px;box-shadow:inset 0 1px 0 #414b51,0 8px 22px #0005;border-radius:2px}
+.o45-brief::after,.o45-notepad::after{content:'';position:absolute;right:0;top:0;width:28px;height:3px;background:#b1ff69;clip-path:polygon(30% 0,100% 0,100% 100%,0 100%)}
+.o45-section-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:21px;padding-bottom:12px;border-bottom:1px solid #394348}
+.o45-section-heading>span{font-size:11px;letter-spacing:2.1px;font-weight:850;color:#b1ff69}
+.o45-section-heading>small{font-size:10px;letter-spacing:1px;color:#9ba7ac}
+.o45-quiet{font-size:12px;color:#f1f5f7;border:none;background:transparent;padding:6px 0;font-weight:700}
+.o45-quiet:hover{color:#b1ff69}
+.o45-tags{display:flex;flex-wrap:wrap;gap:7px}
+.o45-tags span{background:#2c3435;border:1px solid #475453;color:#e1e9ea;padding:7px 10px;font-size:11px;letter-spacing:.4px;text-transform:uppercase;font-weight:800}
+.o45-description{font-size:16px;font-weight:580;line-height:1.55;min-height:68px;color:#f2f5f5;margin:20px 0}
+.o45-focus{border-top:1px solid #333c3f;padding-top:17px}
+.o45-focus small,.o45-financial-strip small{display:block;color:#9eabad;font-size:10px;letter-spacing:1.3px;font-weight:800}
+.o45-focus p{margin:8px 0 18px;line-height:1.55;font-size:14px;color:#d8dfe1}
+.o45-financial-strip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:#41484a;margin:12px 0 16px;border:1px solid #41484a}
+.o45-financial-strip>div{min-width:0;background:#171e23;padding:13px 11px}
+.o45-financial-strip strong{display:block;font-size:clamp(16px,1.8vw,23px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:9px;font-weight:850;font-variant-numeric:tabular-nums}
+.o45-financial-strip strong.o45-pos{color:#b1ff69}.o45-financial-strip strong.o45-neg{color:#ff9f99}
+.o45-sources{display:flex;gap:15px;flex-wrap:wrap;font-size:13px;font-weight:750;margin-bottom:10px}
+.o45-sources a{color:#b1ff69;text-underline-offset:4px}
+.o45-sources span{color:#9aa6ab}
+.o45-source-note,.o45-hint{display:block;color:#8f9fa5;font-size:11px;line-height:1.5}
+.o45-notepad{display:flex;flex-direction:column}
+.o45-note-label{font-weight:750;font-size:13px;color:#dfe6e8;margin-bottom:11px}
+.o45-notes-input{display:block;flex:1;resize:vertical;min-height:210px;width:100%;border-radius:2px!important;background:#0b1014!important;color:#f1f5f5!important;border:1px solid #465155!important;padding:16px!important;line-height:1.65;font-size:14px}
+.o45-action{background:#b1ff69;border:1px solid #b1ff69;color:#11170c;font-weight:900;letter-spacing:.2px;text-transform:uppercase;font-size:12px;padding:14px 19px;border-radius:2px;align-self:flex-start;margin-top:14px;box-shadow:4px 4px 0 #567c34}
+.o45-action:disabled{background:#58684a;color:#abb5a4;box-shadow:none;cursor:not-allowed}
+.o45-status{font-size:12px;margin:10px 0 0;padding:10px;border-left:3px solid #b1ff69;background:#233024}
+.o45-status.error{border-color:#ff928e;background:#3a2428}.o45-hint{margin-top:auto;padding-top:17px}
+.o45-company-editor{display:grid;gap:10px}
+.o45-company-editor label{display:flex;flex-direction:column;gap:7px;font-size:12px;color:#c3d0d4;font-weight:700}
+.o45-company-editor input,.o45-company-editor textarea,.o45-company-editor select{width:100%;border:1px solid #465155!important;background:#0d1217!important;color:#f4f7f8!important;border-radius:2px!important;padding:11px!important;line-height:1.5}
+.o45-edit-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+@media(max-width:1050px){.o45-cockpit{grid-template-columns:1fr}.o45-notes-input{min-height:170px}}
+@media(max-width:600px){.o45-brief,.o45-notepad{padding:16px}.o45-edit-grid{grid-template-columns:1fr}.o45-financial-strip>div{padding:10px 7px}.o45-financial-strip strong{font-size:15px}}
