@@ -49,8 +49,16 @@ async function save(e:FormEvent){
  if(view==='CRM'){
   const hasRevenue=payload.revenue_latest!==null||payload.revenue_previous!==null;
   if(hasRevenue&&(!payload.financial_year||!String(payload.financial_source_url||'').startsWith('https://'))){setError('Financial values require reporting year and HTTPS source URL.');return}
-  if(hasRevenue)payload.financial_checked_at=new Date().toISOString();
   if(String(payload.website_url||'')&&!/^https?:\/\//.test(String(payload.website_url))){setError('Company website must be an http(s) URL.');return}
+  if(edit?.id){
+   for(const k of Object.keys(payload)){
+    const before=k==='assigned_roles'?JSON.stringify(edit[k]||[]):String(edit[k]??'');
+    const after=k==='assigned_roles'?JSON.stringify(payload[k]||[]):String(payload[k]??'');
+    if(before===after)delete payload[k];
+   }
+   if(!Object.keys(payload).length){setEdit(null);setNotice(locale==='sv'?'Inga ändringar att spara.':'No changes to save.');return}
+  }
+  if(['revenue_latest','revenue_previous','financial_year','financial_source_url'].some(k=>k in payload))payload.financial_checked_at=hasRevenue?new Date().toISOString():null;
  }
  if(edit?.id&&view==='Tasks'&&role==='owner'){
   const {error:taskErr}=await supabase.rpc('owner_update_task',{p_task_id:edit.id,p_title:payload.title,p_details:payload.details,p_due_date:payload.due_date,p_priority:payload.priority,p_status:payload.status,p_assigned_to:payload.assigned_to});
