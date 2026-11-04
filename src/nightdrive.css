@@ -1,0 +1,45 @@
+/* ONYX45 CRM // NIGHTDRIVE. Original racing-era interface vocabulary: angular navigation, diagonal accents, cockpit telemetry. */
+:root{--o45-ink:#090d10;--o45-panel:#161b1f;--o45-panel-raised:#1b2227;--o45-stroke:#39464b;--o45-silver:#ccd3d6;--o45-lime:#b1ff69;--o45-muted:#96a4ab;font-family:"Arial Narrow",Inter,"Helvetica Neue",Arial,system-ui,sans-serif;background:var(--o45-ink);color:#f3f7f8}
+body{background:radial-gradient(ellipse 100% 70% at 110% 0,#263529 0%,transparent 50%),linear-gradient(115deg,#090d10,#11171b 55%,#0b1012);background-attachment:fixed}
+.shell{background:transparent}.shell>aside{width:232px;padding:26px 13px 18px;background:linear-gradient(180deg,#171e21 0%,#090e11 65%);border-right:1px solid #3c4748;box-shadow:4px 0 30px #0006;position:relative}
+.shell>aside::after{content:"";position:absolute;right:-2px;top:96px;width:3px;height:90px;background:linear-gradient(var(--o45-lime),transparent);pointer-events:none}
+.brand{font-weight:950;letter-spacing:-1.6px;font-size:28px;line-height:1;text-transform:uppercase}
+.brand small{font-weight:780;letter-spacing:1.7px;font-size:9px;color:#c1cccb}
+.aside-caption{font-size:10px;letter-spacing:2.8px;color:#b1ff69;opacity:.86;margin-top:49px;margin-left:11px}
+.shell>aside nav{gap:3px;margin-top:15px}.shell>aside nav button{border-radius:1px;background:transparent;color:#b6c0c3;text-transform:uppercase;font-size:12px;letter-spacing:.65px;font-weight:850;padding:14px 14px;position:relative;transition:background .15s,color .15s,padding .15s;text-align:left}
+.shell>aside nav button:hover{color:#fbfffd;background:#26312d;padding-left:20px}
+.shell>aside nav button.selected{color:#0c140a;background:var(--o45-lime);font-weight:950;box-shadow:4px 0 0 #587a38}
+.shell>aside nav button.selected::after{content:"";position:absolute;right:0;top:0;width:10px;height:100%;background:#19221b;clip-path:polygon(100% 0,100% 100%,0 100%)}
+.shell>aside footer{border-top:1px solid #344146;padding-top:16px}
+.shell>aside footer button{border-radius:1px;font-size:12px}
+main>header{height:66px;border-bottom:1px solid #354246;background:linear-gradient(90deg,#11181cf2,#1c2827d9);padding:0 32px;font-weight:850;text-transform:uppercase;letter-spacing:1.4px;color:#dee6e6}
+main>header button{border-radius:2px;font-size:12px;text-transform:uppercase;font-weight:850}
+.content{padding:26px 32px 55px;max-width:1650px}
+.content>.eyebrow,.eyebrow{color:#b1ff69;letter-spacing:2.4px;font-weight:900;font-size:10px}
+.heading{padding-bottom:20px;margin-bottom:22px;border-bottom:1px solid #3d4749}
+.heading h1{font-size:clamp(31px,3.2vw,46px);line-height:1;letter-spacing:-1.9px;font-weight:950;text-transform:uppercase;margin:10px 0}
+.heading p{font-size:12px;letter-spacing:1.3px;text-transform:uppercase}
+button,input,select,textarea{transition:border-color .15s,background-color .15s,box-shadow .15s}
+.primary,.bs-hero-action{border-radius:2px!important;background:var(--o45-lime)!important;color:#11150c!important;text-transform:uppercase;letter-spacing:.4px;font-weight:900!important;box-shadow:4px 4px 0 #567a37}
+.secondary,header button,.actions button,.meetingrow button{border-radius:2px!important;background:#263137;color:#f6fafa;border:1px solid #546066;font-weight:750}
+.secondary:hover,header button:hover,.actions button:hover{background:#35443b;border-color:#b1ff69}
+input,select,textarea{border-radius:2px!important;background:#0b1115!important;border-color:#435056!important}
+input:focus,select:focus,textarea:focus{border-color:#b1ff69!important;box-shadow:0 0 0 1px #b1ff69}
+.metrics article,.panel,.lane,.auth,.sales-pulse,.pipe-overview>div,.pipe-lane,.bs-summary,.bs-stats>div,.bs-focus{border-radius:2px!important;border:1px solid #38454a!important;background:linear-gradient(130deg,#1d2529 0%,#151b20 70%)!important;box-shadow:inset 0 1px 0 #3c474a}
+.panel{margin-top:16px;padding:24px}
+.panel h2,.panel h3{letter-spacing:-.45px;font-weight:900}
+.metrics{gap:10px}.metrics article{padding:19px}
+.metrics strong{font-size:36px;letter-spacing:-1px}
+table th{color:#b1ff69;letter-spacing:1.2px;font-size:10px}
+table td{border-color:#354247}
+table tbody tr:hover{background:#27302e}
+.drawer{background:#171f23;border-left:3px solid #b1ff69;box-shadow:-20px 0 55px #000b}
+.drawer-head{padding-bottom:15px;border-bottom:1px solid #414b50}
+.drawer-head h2{font-size:29px;text-transform:uppercase;font-weight:950}
+.drawer label{font-weight:750;color:#d4dedd}
+.day,.lane article,.pipe-card,.bs-meeting{border-radius:2px!important}
+.auth{border-top:3px solid #b1ff69}
+.content::before{content:"";display:block;height:3px;width:85px;background:linear-gradient(90deg,#b1ff69,#8bb74e 70%,transparent);margin-bottom:16px}
+@media(max-width:900px){.shell>aside{width:205px}.content{padding:22px 21px}.shell>aside nav button{padding:12px 8px;font-size:11px}}
+@media(max-width:750px){.shell>aside{position:sticky;top:0;width:100%;padding:10px 13px;z-index:10}.shell>aside nav{margin-top:9px;gap:3px}.shell>aside nav button,.shell>aside nav button:hover{padding:9px 12px;font-size:10px}.shell>aside::after{display:none}.content{padding:18px 14px}.heading h1{font-size:31px}main>header{height:45px;padding:0 14px;font-size:10px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}}
