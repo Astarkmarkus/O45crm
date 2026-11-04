@@ -34,3 +34,47 @@
 .bs-outcome-panel{grid-column:1/-1;margin-top:0;max-width:none}
 .bs-outcome-panel form{max-width:680px}
 @media(max-width:900px){.bs-work-columns{grid-template-columns:1fr}.bs-playbook-panel{padding:15px}}
+
+/* NIGHTDRIVE / ACTIVE CALL FLOW */
+.bs-header{margin-bottom:14px}
+.bs-header h2{font-size:clamp(30px,3vw,43px);font-weight:950;letter-spacing:-1.4px;text-transform:uppercase}
+.bs-header small{letter-spacing:2.5px;font-weight:900}
+.bs-navigation{gap:0;border-bottom:1px solid #3c494d;padding-bottom:9px;margin-bottom:18px}
+.bs-navigation button{border-radius:1px!important;background:transparent;color:#d4dcdd;font-size:12px;text-transform:uppercase;font-weight:850;letter-spacing:.5px;border:1px solid transparent;border-bottom:2px solid #4d5559}
+.bs-navigation button:hover{background:#27312d;border-color:#718b61}
+.bs-navigation button.active{background:#b1ff69!important;color:#111711!important;border-color:#b1ff69;font-weight:950}
+.bs-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px}
+.bs-stats>div{border-radius:1px;padding:18px 16px;border-left:3px solid #b1ff69}
+.bs-stats strong{font-size:35px;font-weight:950}
+.bs-stats small{font-size:10px;text-transform:uppercase;letter-spacing:1px}
+.bs-prospect-head{margin:11px 0 12px;border-radius:2px!important;background:linear-gradient(100deg,#20292a,#0f161a)!important;border-left:4px solid #b1ff69!important;padding:21px 24px!important;position:relative}
+.bs-prospect-head h3{font-size:clamp(28px,3.2vw,43px);font-weight:950;letter-spacing:-1.3px;text-transform:uppercase}
+.bs-prospect-head p{font-size:13px;margin:7px 0}
+.bs-call-button{border-radius:2px!important;text-transform:uppercase;font-weight:950;padding:17px 23px!important;box-shadow:4px 4px 0 #567a37}
+.bs-back{font-size:11px;font-weight:900;letter-spacing:1.3px;text-transform:uppercase}
+.bs-skip-row{display:flex;align-items:center;justify-content:space-between;gap:9px;flex-wrap:wrap}
+.bs-queue-button,.bs-skip-row .secondary{border-radius:2px!important;text-transform:uppercase;font-size:11px;font-weight:900}
+.bs-work-columns{display:grid!important;grid-template-columns:1fr!important;gap:12px;align-items:start}
+.bs-outcome-panel{grid-column:1/-1!important;margin:0!important;padding:20px 24px!important;border-radius:2px!important;border-left:3px solid #a7ff63!important;background:linear-gradient(140deg,#1b2327,#11181c)!important}
+.bs-outcome-panel h4{font-weight:950;font-size:17px;text-transform:uppercase;letter-spacing:.4px;margin:0 0 13px}
+.bs-outcome-panel form{max-width:none!important}
+.bs-outcomes{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px}
+.bs-outcomes button{border-radius:2px!important;border:1px solid #465459!important;text-transform:uppercase;font-size:11px;font-weight:900;letter-spacing:.3px;padding:13px 6px}
+.bs-outcomes button.chosen{color:#11190f;background:#b1ff69!important;border-color:#b1ff69!important}
+.bs-outcome-panel textarea{min-height:70px!important}
+.bs-outcome-panel form>.bs-hero-action{width:auto;min-width:220px;float:none;margin-top:13px}
+.bs-advanced-guide{grid-column:1/-1!important;padding:13px 17px!important;border:1px solid #3f4d52!important;border-left:3px solid #68787b!important;margin:0!important;background:#151b1e}
+.bs-advanced-guide>summary{font-size:11px!important;letter-spacing:1.5px;text-transform:uppercase;color:#bdc9cb;font-weight:900!important;cursor:pointer}
+.bs-advanced-guide[open]{display:grid;grid-template-columns:1.35fr 1fr;column-gap:12px;row-gap:12px}
+.bs-advanced-guide[open]>summary{grid-column:1/-1}
+.bs-advanced-guide .bs-script-panel,.bs-advanced-guide .bs-playbook-panel{margin:0;border-radius:2px;min-width:0;padding:17px}
+.bs-advanced-guide .bs-script{max-height:400px;overflow-y:auto}
+.bs-advanced-guide .bs-playbook-panel{width:auto!important}
+.bs-log-note{color:#d5f3bd}
+.bs-queue-drawer{border-left:3px solid #b1ff69!important;background:#151c20!important}
+.bs-queue-items button,.bs-focus,.bs-summary,.bs-queue-top{border-radius:2px!important}
+.bs-summary>button{border-radius:2px!important}
+.bs-focus h3{font-size:28px;font-weight:950;text-transform:uppercase}
+.bs-error,.bs-success{border-radius:2px;border-left:4px solid currentColor}
+@media(max-width:1100px){.bs-outcomes{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:700px){.bs-outcomes{grid-template-columns:repeat(2,minmax(0,1fr))}.bs-outcome-panel{padding:15px!important}.bs-advanced-guide[open]{grid-template-columns:1fr}.bs-advanced-guide .bs-playbook-panel{grid-column:1}.bs-prospect-head{padding:15px!important}.bs-call-button{padding:12px!important}}
