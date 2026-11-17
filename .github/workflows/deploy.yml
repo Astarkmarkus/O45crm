@@ -32,6 +32,8 @@ jobs:
           if [[ "$VITE_SUPABASE_URL" != https://*.supabase.co* ]]; then echo 'ERROR: VITE_SUPABASE_URL is not a valid Supabase https URL'; exit 1; fi
           if [[ "$VITE_SUPABASE_ANON_KEY" != sb_publishable_* && "$VITE_SUPABASE_ANON_KEY" != eyJ* ]]; then echo 'ERROR: VITE_SUPABASE_ANON_KEY is not a publishable or anon key'; exit 1; fi
           echo 'Supabase configuration format checks passed (values hidden).'
+      - name: Enforce ONYX45 design tokens
+        run: node scripts/check-theme.mjs
       - run: npm run build
         env:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
