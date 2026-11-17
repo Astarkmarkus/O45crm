@@ -1,0 +1,25 @@
+name: Verify Executive Operations V3
+on:
+  push:
+    branches: [design/executive-operations-v3]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+      - run: npm ci
+      - name: Type check and production build
+        run: npm run build
+      - name: Check expected files exist
+        run: |
+          test -f src/executive.css
+          test -f src/LeadCockpit.tsx
+          test -f src/BeginnerSales.tsx
+          test -f dist/index.html
