@@ -133,3 +133,24 @@ a:hover{text-decoration-thickness:2px}
 .o45-profit-row small{font-size:10px;letter-spacing:1.2px;color:#d8c9c3;font-weight:800}
 .o45-profit-row strong{font-size:19px;font-variant-numeric:tabular-nums;font-weight:750;color:#f2ebe2}
 .o45-source-note+.o45-source-note{margin-top:8px}
+
+/* Authorized company and contact indexes */
+.executive-directory{background:linear-gradient(145deg,#44333b,#30262c);border:1px solid #806a74;border-radius:4px;padding:24px}
+.executive-directory-head{display:flex;align-items:start;justify-content:space-between;gap:12px;border-bottom:1px solid #806a74;padding-bottom:16px}
+.executive-directory-head small{font-size:10px;color:#afc3cf;font-weight:800;letter-spacing:1.5px}
+.executive-directory-head h2{font:600 32px/1.2 Georgia,"Times New Roman",serif;margin:10px 0}
+.executive-directory-head p{font-size:12px;color:#dccdca}
+.executive-directory-head>span{font-size:12px;color:#c7b6b9}
+.executive-directory-search{display:block;margin:18px 0;font-size:12px;color:#dccdca}
+.executive-directory-search input{display:block;width:100%;margin-top:8px;padding:11px 13px}
+.executive-directory-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
+.executive-directory-grid article{background:#32262d;border:1px solid #796573;padding:17px;min-width:0;overflow-wrap:anywhere}
+.executive-directory-grid article small{color:#afc3cf;font-size:10px;letter-spacing:1px;font-weight:700}
+.executive-directory-grid article h3{font:600 23px/1.22 Georgia,"Times New Roman",serif;margin:10px 0}
+.executive-directory-grid article p{color:#ddcfcc;font-size:12px;line-height:1.55}
+.executive-directory-grid article a{color:#afc3cf;display:inline-block;margin-right:12px;margin-top:10px;font-size:12px}
+.executive-directory-notes{padding:10px;background:#241d23;border-left:2px solid #afc3cf}
+.executive-directory-pages{display:flex;align-items:center;justify-content:center;gap:16px;margin:22px 0 0}
+.executive-directory-pages span{font-size:12px}
+.executive-directory-pages button:disabled{opacity:.45;cursor:not-allowed}
+@media(max-width:600px){.executive-directory{padding:16px}.executive-directory-head h2{font-size:25px}}
