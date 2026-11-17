@@ -154,3 +154,19 @@ a:hover{text-decoration-thickness:2px}
 .executive-directory-pages span{font-size:12px}
 .executive-directory-pages button:disabled{opacity:.45;cursor:not-allowed}
 @media(max-width:600px){.executive-directory{padding:16px}.executive-directory-head h2{font-size:25px}}
+
+/* Reporting: actual recorded payment dates and business activity */
+.executive-report{background:linear-gradient(145deg,#46343d,#30262c);border:1px solid #806a74;border-radius:4px;padding:24px}
+.executive-report-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:10px;margin:20px 0 30px}
+.executive-report-kpis article{background:#33272e;border:1px solid #765e6b;padding:17px;min-width:0}
+.executive-report-kpis small{display:block;color:#d2c3c2;font-size:11px;line-height:1.3}
+.executive-report-kpis strong{display:block;font:600 25px Georgia,"Times New Roman",serif;color:#f2ebe2;margin-top:12px;overflow-wrap:anywhere}
+.executive-report h3{font:600 23px Georgia,"Times New Roman",serif;margin-bottom:15px}
+.executive-report-chart{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px;min-height:224px;padding:18px;background:#2d252a;border:1px solid #806b75}
+.executive-report-month{display:flex;align-items:center;flex-direction:column;gap:10px;min-width:0}
+.executive-report-month>strong{font-size:11px;font-weight:650;color:#f2ebe2;overflow-wrap:anywhere;text-align:center}
+.executive-report-track{background:#42323b;min-height:145px;width:100%;display:flex;align-items:flex-end}
+.executive-report-track span{display:block;width:100%;background:linear-gradient(0deg,#552632,#afc3cf);min-height:0}
+.executive-report-month>small{font-size:10px;color:#cfbcc4}
+.executive-report-note{color:#d3c5c7;font-size:12px;line-height:1.6;margin-top:15px}
+@media(max-width:650px){.executive-report{padding:14px}.executive-report-chart{gap:4px;padding:12px}.executive-report-month>strong{font-size:9px}.executive-report-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
