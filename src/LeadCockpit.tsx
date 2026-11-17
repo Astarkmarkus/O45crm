@@ -25,8 +25,9 @@ export default function LeadCockpit({lead,language,owner,onRefresh}:{lead:Lead;l
  async function saveNotes(){
   if(!supabase||saving||note===savedNote)return;
   setSaving(true);setStatus('');setStatusType('');
-  const {data,error}=await supabase.from('leads').update({notes:note}).eq('id',lead.id).select('id,notes').maybeSingle();
-  if(error||!data||value(data.notes)!==note){setStatus((sv?'Anteckningarna sparades inte: ':'Notes were not saved: ')+(error?.message||'No confirmed database update'));setStatusType('error')}
+  const request=savedNote===''&&(lead.notes===null||lead.notes===undefined)?supabase.from('leads').update({notes:note}).eq('id',lead.id).is('notes',null):supabase.from('leads').update({notes:note}).eq('id',lead.id).eq('notes',savedNote);
+  const {data,error}=await request.select('id,notes').maybeSingle();
+  if(error||!data||value(data.notes)!==note){setStatus((sv?'Anteckningarna sparades inte: ':'Notes were not saved: ')+(error?.message||(sv?'Ändrad av en annan användare. Uppdatera sidan och kontrollera anteckningarna.':'Another user may have edited the notes. Refresh and review before saving.')));setStatusType('error')}
   else {setSavedNote(note);setStatus(sv?'Anteckningarna sparade i CRM.':'Notes saved to CRM.');setStatusType('success');await onRefresh()}
   setSaving(false);
  }
