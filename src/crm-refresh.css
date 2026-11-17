@@ -174,3 +174,143 @@ body{background:var(--o45-bg)!important;color:var(--o45-text)!important}
 .executive-report-track span{background:linear-gradient(0deg,var(--o45-bordeaux),var(--o45-blue))!important}
 input:focus,textarea:focus,select:focus{border-color:var(--o45-blue)!important;box-shadow:0 0 0 1px var(--o45-blue)!important}
 button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline-color:var(--o45-blue)!important}
+
+/* ONYX45 CRM / responsive sizing & layout integrity
+   Keep structure here: the old removed theme included these layout rules.
+   Avoid fixed widths outside the sidebar and prevent row contents from expanding tracks. */
+*,*::before,*::after{box-sizing:border-box}
+html,body,#root{width:100%;min-height:100%;margin:0}
+html{overflow-x:clip}
+body{min-width:320px;overflow-x:clip}
+#root{min-width:0}
+img,svg,video,canvas{max-width:100%}
+button,input,select,textarea{font:inherit}
+button,a,textarea,p,small,strong,h1,h2,h3,h4,td,th{overflow-wrap:anywhere}
+.shell{display:flex;align-items:stretch;min-width:0;width:100%;max-width:100%;min-height:100dvh}
+.shell>aside{flex:0 0 226px;min-width:0;max-width:226px}
+.shell>main,main{min-width:0;max-width:100%;flex:1 1 auto}
+main>header{min-width:0;max-width:100%;gap:12px;flex-wrap:wrap}
+main>header>*{min-width:0}
+.content{width:100%;max-width:1720px;min-width:0;margin:0 auto}
+.content>*{min-width:0;max-width:100%}
+.heading{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:14px}
+.heading>*{min-width:0}
+.heading h1{line-height:1.12}
+.panel,.metrics,.sales-pulse,.executive-priorities,.executive-report,.crm-workspace,.bs-root,.week-scroll{min-width:0;max-width:100%}
+.panel-top,.panel-top>.actions{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.panel-top>*{min-width:0}
+.panel-top>.actions{justify-content:flex-start}
+.metrics,.goal-grid,.pipe-overview{grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr));min-width:0}
+.metrics article,.pipe-overview>div,.goal-card{min-width:0}
+.table-scroll,.week-scroll{max-width:100%;overflow-x:auto;overscroll-behavior-inline:contain}
+.drawer{width:min(540px,100vw);max-width:100%;min-width:0;max-height:100dvh;overflow-y:auto}
+.drawer label,.drawer input,.drawer textarea,.drawer select{min-width:0;max-width:100%}
+
+/* Dashboard briefing. These structural rules used to live in the deleted executive stylesheet. */
+.executive-priorities{display:block;width:100%;padding:clamp(16px,2vw,25px);margin:0 0 20px;border-radius:6px}
+.executive-priorities-head{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:14px;padding-bottom:17px;border-bottom:1px solid var(--o45-border)}
+.executive-priorities-head>*{min-width:0;max-width:100%}
+.executive-priorities-head>div{flex:1 1 270px}
+.executive-priorities-head small,.executive-quick-actions>span{font-size:10px;font-weight:800;letter-spacing:1.4px;color:var(--o45-blue)}
+.executive-priorities-head h2{font-family:Inter,ui-sans-serif,system-ui,sans-serif;font-size:clamp(21px,2vw,29px);line-height:1.16;font-weight:800;letter-spacing:-.5px;margin:9px 0}
+.executive-priorities-head p{font-size:13px;line-height:1.5;color:var(--o45-text-secondary);margin:0}
+.executive-priorities-head>span{flex:0 1 auto;font-size:12px;color:var(--o45-text-secondary);white-space:normal}
+.executive-priorities-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;width:100%;margin:18px 0 0}
+.executive-priorities-grid>button{display:flex;flex-direction:column;justify-content:flex-start;align-items:stretch;text-align:left;gap:12px;min-width:0;min-height:145px;width:100%;padding:17px;border:1px solid var(--o45-border);border-radius:5px;background:var(--o45-panel-raised);color:var(--o45-text);white-space:normal}
+.executive-priorities-grid>button>span{display:block;min-width:0;font-size:11px;line-height:1.45;letter-spacing:.3px;font-weight:750;color:var(--o45-text-secondary)}
+.executive-priorities-grid>button>strong{display:block;min-width:0;font-size:clamp(27px,2.8vw,38px);line-height:1;font-weight:850;color:var(--o45-text);font-variant-numeric:tabular-nums}
+.executive-priorities-grid>button>small{display:block;margin-top:auto;font-size:11px;line-height:1.4;color:var(--o45-blue);font-weight:700}
+.executive-quick-actions{display:flex;align-items:center;flex-wrap:wrap;gap:10px;min-width:0;width:100%;padding-top:17px;margin-top:18px;border-top:1px solid var(--o45-border)}
+.executive-quick-actions>span{margin-right:8px;flex:0 1 auto}
+.executive-quick-actions>button{flex:0 1 auto;min-width:135px;max-width:100%;width:auto;padding:11px 15px;white-space:normal;text-align:center}
+
+/* Consolidated dashboard reports: restore grid layout and prevent values overlapping. */
+.executive-report{width:100%;min-width:0;padding:clamp(16px,2vw,24px);margin:18px 0}
+.executive-report .executive-directory-head{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;padding-bottom:16px;border-bottom:1px solid var(--o45-border)}
+.executive-report .executive-directory-head>*{min-width:0}
+.executive-report .executive-directory-head h2{font-size:clamp(21px,2vw,28px);font-weight:800;margin:8px 0}
+.executive-report-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,185px),1fr));gap:12px;margin:18px 0 25px}
+.executive-report-kpis article{display:flex;flex-direction:column;justify-content:space-between;gap:14px;min-height:105px;min-width:0;background:var(--o45-panel-raised);border:1px solid var(--o45-border);border-radius:5px;padding:16px}
+.executive-report-kpis article small{display:block;line-height:1.4;font-size:11px;color:var(--o45-text-secondary)}
+.executive-report-kpis article strong{display:block;font-size:clamp(20px,2vw,27px);line-height:1.2;font-weight:800;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+.executive-report>h3{font-size:18px;line-height:1.3;margin:17px 0}
+.executive-report-chart{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;min-width:0;width:100%;padding:16px;background:var(--o45-panel);border:1px solid var(--o45-border);border-radius:5px}
+.executive-report-month{display:flex;flex-direction:column;align-items:center;gap:8px;min-width:0}
+.executive-report-month>strong{max-width:100%;font-size:10px;line-height:1.25;text-align:center;overflow-wrap:anywhere}
+.executive-report-track{width:100%;height:130px;min-height:130px;display:flex;align-items:flex-end;background:var(--o45-panel-raised)}
+.executive-report-track>span{display:block;width:100%;min-height:0;background:linear-gradient(0deg,var(--o45-bordeaux),var(--o45-blue))}
+.executive-report-month>small{font-size:10px;text-align:center;color:var(--o45-text-secondary)}
+.executive-report-note{margin-top:14px;font-size:12px;line-height:1.6;color:var(--o45-text-secondary)}
+
+/* CRM inspector: keep notes and company details visible, without text collision. */
+.crm-workspace{grid-template-columns:minmax(240px,340px) minmax(0,1fr);width:100%;min-width:0}
+.crm-workspace>*,.crm-roster,.crm-inspector{min-width:0}
+.crm-detail-head,.crm-list-item-top,.crm-detail-footer{min-width:0}
+.crm-detail-head>div{min-width:0;flex:1 1 230px}
+.crm-info-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+.crm-info-grid>div,.crm-details-bottom>div{min-width:0}
+.crm-details-bottom{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.crm-notes-section textarea{min-width:0;width:100%;max-width:100%;resize:vertical}
+
+/* Sales Workspace and calendar: contain overflowing controls and time blocks. */
+.bs-root,.sales-workspace,.bs-work-columns,.bs-cockpit,.bs-focus{width:100%;min-width:0;max-width:100%}
+.bs-header,.sales-top,.bs-prospect-head,.bs-navigation,.sales-tabs{min-width:0;max-width:100%;flex-wrap:wrap}
+.bs-work-columns>*{min-width:0}
+.bs-outcomes{grid-template-columns:repeat(auto-fit,minmax(min(100%,140px),1fr))}
+.week-scroll{overflow-x:auto;max-width:100%;width:100%}
+.week-grid{min-width:885px}
+.week-slot,.week-day-label,.week-event{min-width:0;overflow-wrap:anywhere}
+.calendar{min-width:0;max-width:100%}
+.calendar>.day{min-width:0}
+.calendar-view-switch,.week-controls,.calendar-jump{flex-wrap:wrap;min-width:0;max-width:100%}
+
+/* Breakpoints based on available app content width, not solely phone vs desktop. */
+@media(max-width:1400px){
+ .executive-priorities-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .crm-info-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .crm-details-bottom{grid-template-columns:1fr}
+}
+@media(max-width:1020px){
+ .shell>aside{flex-basis:198px;max-width:198px;width:198px!important}
+ .content{padding:20px 18px 35px!important}
+ .crm-workspace{grid-template-columns:minmax(210px,285px) minmax(0,1fr)}
+ .executive-quick-actions>span{width:100%;margin:0}
+ .executive-report-chart{gap:5px;padding:10px}
+ .executive-report-month>strong{font-size:9px}
+}
+@media(max-width:750px){
+ .shell{display:block}
+ .shell>aside{width:100%!important;max-width:100%!important;position:sticky;top:0;z-index:10;padding:10px 12px!important}
+ .shell>aside nav{display:flex;overflow-x:auto;max-width:100%;white-space:nowrap}
+ .shell>aside nav button{flex-shrink:0}
+ main{width:100%;min-width:0}
+ main>header{height:auto!important;min-height:48px;padding:10px 14px!important}
+ .content{padding:15px 12px 32px!important}
+ .executive-priorities-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .executive-priorities-grid>button{min-height:123px;padding:12px}
+ .executive-quick-actions>button{flex:1 1 135px}
+ .crm-workspace{display:flex;flex-direction:column}
+ .crm-roster{width:100%;border-right:0;border-bottom:1px solid var(--o45-border)}
+ .crm-list{max-height:260px}
+ .crm-inspector{padding:16px}
+ .crm-details-bottom{grid-template-columns:1fr}
+ .crm-info-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .executive-report-chart{overflow-x:auto}
+ .executive-report-month>strong{font-size:9px}
+}
+@media(max-width:480px){
+ .executive-priorities-head>span{width:100%}
+ .executive-priorities-grid{grid-template-columns:1fr}
+ .executive-priorities-grid>button{min-height:105px;gap:8px}
+ .executive-priorities-grid>button>strong{font-size:30px}
+ .executive-quick-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+ .executive-quick-actions>span{grid-column:1/-1}
+ .executive-quick-actions>button{min-width:0;width:100%}
+ .executive-report-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .executive-report-kpis article{min-height:100px;padding:11px}
+ .executive-report-chart{grid-template-columns:repeat(6,minmax(63px,1fr))}
+ .crm-detail-head{display:flex;flex-wrap:wrap}
+ .crm-action-row{gap:7px}
+ .crm-action-row>*{flex:1 1 135px;text-align:center}
+ .crm-info-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
