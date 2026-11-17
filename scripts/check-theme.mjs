@@ -3,13 +3,13 @@
 import {readFileSync} from 'node:fs';
 const cssFiles=['src/style.css','src/beginner-sales.css','src/cockpit.css','src/sales.css','src/crm-refresh.css'];
 const theme=readFileSync('src/crm-refresh.css','utf8');
-const tokenHeaderEnd=theme.indexOf('/* ONYX45 CRM | unified charcoal/lime theme');
+const tokenHeaderEnd=theme.indexOf('/* ONYX45 CRM | unified Heritage Bordeaux 2.0 theme');
 if(tokenHeaderEnd<0)throw Error('Canonical design token header missing');
 const header=theme.slice(0,tokenHeaderEnd);
 const defined=[...header.matchAll(/--o45-[\w-]+:\s*(#[0-9A-Fa-f]{6})\s*;/g)];
-if(defined.length<13)throw Error('Insufficient canonical ONYX45 color tokens');
+if(defined.length<17)throw Error('Insufficient canonical ONYX45 color tokens');
 const allowed=new Set(defined.map(m=>m[1].toLowerCase()));
-if(!allowed.has('#b1ff69'))throw Error('ONYX45 lime accent token missing');
+if(!allowed.has('#552632')||!allowed.has('#322629')||!allowed.has('#f2ebe2')||!allowed.has('#afc3cf'))throw Error('Heritage Bordeaux 2.0 core palette is incomplete');
 const issues=[];
 for(const file of cssFiles){
  const body=readFileSync(file,'utf8');
