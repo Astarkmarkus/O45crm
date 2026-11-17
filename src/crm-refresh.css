@@ -1,22 +1,27 @@
-/* ONYX45 DESIGN TOKENS — single source of truth.
-   Never use legacy Heritage Bordeaux, Nightdrive or arbitrary new hex codes in components.
-   Palette: charcoal + ivory white + ONYX lime. */
+/* ONYX45 CRM — Heritage Bordeaux 2.0 design system.
+   The single active palette. Keep styling in centralized semantic tokens.
+   Primary interaction: Bordeaux; background: Espresso; type: Ivory;
+   secondary accents: Plum, Rose Taupe and Heritage Blue. */
 :root{
- --o45-bg:#0B0F12;
- --o45-panel:#151C22;
- --o45-panel-raised:#1D262D;
- --o45-border:#34424B;
- --o45-border-strong:#495A63;
- --o45-muted:#94A6B1;
- --o45-text-secondary:#C8D2D8;
- --o45-text:#F4F7FA;
- --o45-accent:#B1FF69;
- --o45-accent-hover:#CBFFA0;
- --o45-accent-soft:#243622;
- --o45-danger:#FF9FA7;
- --o45-danger-bg:#3A252A;
- --o45-warning:#F5C58B;
- --o45-success-bg:#22372B;
+ --o45-bg:#211B1E;
+ --o45-panel:#322629;
+ --o45-panel-raised:#42323A;
+ --o45-border:#705A62;
+ --o45-border-strong:#967B84;
+ --o45-muted:#B9A8AD;
+ --o45-text-secondary:#D9CDCB;
+ --o45-text:#F2EBE2;
+ --o45-accent:#BCA4A2;
+ --o45-accent-hover:#E0CAC5;
+ --o45-accent-soft:#533742;
+ --o45-danger:#F2A7AD;
+ --o45-danger-bg:#553039;
+ --o45-warning:#F1C59B;
+ --o45-success-bg:#33453B;
+ --o45-bordeaux:#552632;
+ --o45-espresso:#322629;
+ --o45-plum:#776174;
+ --o45-blue:#AFC3CF;
  --lime:var(--o45-accent);
  --surface:var(--o45-panel);
  --surface2:var(--o45-panel-raised);
@@ -24,14 +29,13 @@
  --muted:var(--o45-muted);
  --text:var(--o45-text);
  --onyx-ivory:var(--o45-text);
- --onyx-blue:var(--o45-accent);
+ --onyx-blue:var(--o45-blue);
  --o45-lime:var(--o45-accent);
  color-scheme:dark;
  background:var(--o45-bg);
  color:var(--o45-text);
 }
-
-/* ONYX45 CRM | unified charcoal/lime theme loaded last, no competing themes. */
+/* ONYX45 CRM | unified Heritage Bordeaux 2.0 theme */
 
 body{background:var(--o45-bg)!important}
 .shell>aside{background:var(--o45-panel)!important;border-right:1px solid var(--o45-border)!important;width:226px!important;padding:24px 15px!important}
@@ -144,3 +148,29 @@ table th{color:var(--o45-accent)!important}
 @media(max-width:980px){.crm-workspace{grid-template-columns:minmax(235px,300px) minmax(0,1fr)}.crm-inspector{padding:19px}.crm-roster-head{padding:16px 12px}.crm-filters,.crm-search-label{padding-left:12px;padding-right:12px}}
 @media(max-width:750px){.crm-workspace{display:flex;flex-direction:column}.crm-roster{border-right:0;border-bottom:1px solid var(--o45-border-strong)}.crm-list{max-height:255px}.crm-list-item{padding:10px 12px}.crm-inspector{padding:16px}.crm-detail-head{flex-wrap:wrap}.crm-detail-head h2{font-size:26px!important}.crm-details-bottom{grid-template-columns:1fr}.crm-info-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(prefers-reduced-motion:reduce){.crm-list-item{transition:none}}
+
+/* Heritage Bordeaux interaction hierarchy and consistent typography. */
+body{background:var(--o45-bg)!important;color:var(--o45-text)!important}
+.shell>aside{background:var(--o45-espresso)!important;border-color:var(--o45-border)!important}
+.shell>aside nav button.selected{background:var(--o45-bordeaux)!important;color:var(--o45-text)!important;box-shadow:inset 3px 0 0 var(--o45-accent)!important}
+.shell>aside nav button:hover{background:var(--o45-accent-soft)!important;color:var(--o45-text)!important}
+.brand span,.crm-roster-head h2 em{color:var(--o45-accent)!important}
+.primary,.bs-hero-action,.o45-action,.crm-main-action,.crm-save-notes{background:var(--o45-bordeaux)!important;color:var(--o45-text)!important;border-color:var(--o45-accent)!important;box-shadow:none!important}
+.primary:hover,.bs-hero-action:hover:not(:disabled),.o45-action:hover:not(:disabled),.crm-main-action:hover,.crm-save-notes:hover:not(:disabled){background:var(--o45-plum)!important;border-color:var(--o45-accent-hover)!important;color:var(--o45-text)!important}
+.crm-workspace,.crm-roster{background:var(--o45-panel)!important;border-color:var(--o45-border)!important}
+.crm-roster{background:var(--o45-espresso)!important}
+.crm-list-item.active{background:var(--o45-accent-soft)!important;border-color:var(--o45-border-strong)!important;box-shadow:inset 3px 0 0 var(--o45-accent)!important}
+.crm-list-item:hover{background:var(--o45-panel-raised)!important}
+.crm-inspector{background:var(--o45-panel)!important}
+.crm-info-grid>div,.crm-company-section,.crm-notes-section{background:var(--o45-panel-raised)!important;border-color:var(--o45-border)!important}
+.crm-list-item-top strong,.crm-detail-head h2,.crm-info-grid strong{color:var(--o45-text)!important}
+.crm-detail-head>div>span,.crm-source-link,.crm-roster-head>div>span,.executive-priorities-head small,.crm-roster-dot{color:var(--o45-blue)!important}
+.crm-roster-dot{background:var(--o45-blue)!important}
+.crm-action-row a,.crm-action-row button,.crm-edit-btn{background:var(--o45-panel-raised)!important;color:var(--o45-text)!important;border-color:var(--o45-border-strong)!important}
+.crm-action-row a:hover,.crm-action-row button:hover,.crm-edit-btn:hover{border-color:var(--o45-accent-hover)!important}
+.crm-priority.high,.crm-notes-heading span.unsaved{color:var(--o45-warning)!important}
+.executive-priorities,.executive-report,.panel{background:var(--o45-panel)!important;border-color:var(--o45-border)!important}
+.executive-priorities-grid>button,.executive-report-kpis article{background:var(--o45-panel-raised)!important;border-color:var(--o45-border)!important}
+.executive-report-track span{background:linear-gradient(0deg,var(--o45-bordeaux),var(--o45-blue))!important}
+input:focus,textarea:focus,select:focus{border-color:var(--o45-blue)!important;box-shadow:0 0 0 1px var(--o45-blue)!important}
+button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline-color:var(--o45-blue)!important}
