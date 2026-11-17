@@ -1,38 +1,19 @@
-# ONYX45 CRM — Visual Design System
+# ONYX45 CRM — Heritage Bordeaux 2.0 (official active palette)
 
-## Single active theme
-- Entry point: `src/main.tsx` imports `src/style.css` and **then** `src/crm-refresh.css` last.
-- Component CSS is permitted for layout, but must use the same semantic color tokens.
-- The old `executive.css` and `nightdrive.css` themes were deleted. Do not re-import them.
-- GitHub Pages CI runs `node scripts/check-theme.mjs` before building. New hard-coded CSS colors outside the token definitions fail deployment.
+The currently requested color direction is **Heritage Bordeaux 2.0**, not the old lime/charcoal theme.
 
-## Official ONYX45 palette
-| Token | Hex | Application |
+| Purpose | Hex | Token |
 |---|---|---|
-| `--o45-bg` | `#0B0F12` | Primary background |
-| `--o45-panel` | `#151C22` | Panels, input dark surfaces |
-| `--o45-panel-raised` | `#1D262D` | Raised secondary panels |
-| `--o45-border` | `#34424B` | Standard subtle borders |
-| `--o45-border-strong` | `#495A63` | Focusable neutral outlines |
-| `--o45-text` | `#F4F7FA` | Main text |
-| `--o45-text-secondary` | `#C8D2D8` | Secondary text |
-| `--o45-muted` | `#94A6B1` | Metadata and muted text |
-| `--o45-accent` | `#B1FF69` | CTA, active navigation, success |
-| `--o45-accent-hover` | `#CBFFA0` | CTA hover |
-| `--o45-accent-soft` | `#243622` | Subtle selection backgrounds |
-| `--o45-danger` | `#FF9FA7` | Errors, destructive actions |
-| `--o45-danger-bg` | `#3A252A` | Destructive/error surface |
-| `--o45-warning` | `#F5C58B` | Warnings and unsaved edits |
-| `--o45-success-bg` | `#22372B` | Success background |
+| Background | `#211B1E` | `--o45-bg` |
+| Espresso panels | `#322629` | `--o45-panel` |
+| Raised surfaces | `#42323A` | `--o45-panel-raised` |
+| Bordeaux action | `#552632` | `--o45-bordeaux` |
+| Ivory text | `#F2EBE2` | `--o45-text` |
+| Heritage Blue | `#AFC3CF` | `--o45-blue` |
+| Rose Taupe highlights | `#BCA4A2` | `--o45-accent` |
+| Plum hover/detail | `#776174` | `--o45-plum` |
+| Borders | `#705A62` | `--o45-border` |
 
-## Rules
-1. Never introduce bordeaux, purple, gold or a second accent color into the product UI.
-2. Use **one** stylesheet as the final theme authority, imported after other component CSS.
-3. Keep typography Inter / system sans-serif across the CRM. Don't introduce Georgia/serif headers.
-4. Buttons are compact with 4–6 px radii, high-contrast text and lime only for primary actions.
-5. Use subtle boundaries rather than thick colored outlines around every card.
-6. Keep CRM notes visible above the fold in a two-pane workspace wherever screen dimensions allow.
-7. Preserve reduced-motion support and accessible keyboard focus.
+Keep the simplified two-pane CRM, integrated dashboard reports, and existing data, but apply the Bordeaux theme consistently. The former green accent `#B1FF69` is **not** part of this active theme.
 
-## Change process
-Edit semantic tokens in `src/crm-refresh.css`, not hundreds of component colors. Use `var(--o45-...)` for new CSS declarations and let the CI guard detect drift.
+The entry point imports `src/style.css` and then `src/crm-refresh.css`; component CSS uses semantic `--o45-*` tokens. Avoid hard-coded colors in components. `node scripts/check-theme.mjs` is required by CI before deployment.
