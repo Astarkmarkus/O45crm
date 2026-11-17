@@ -125,3 +125,11 @@ a:hover{text-decoration-thickness:2px}
 .executive-quick-actions button{font-size:11px;padding:10px 13px}
 @media(max-width:1050px){.executive-priorities-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:520px){.executive-priorities{padding:16px}.executive-priorities-grid{gap:7px}.executive-priorities-grid>button{padding:12px}.executive-priorities-head>span{display:none}.executive-priorities-head h2{font-size:25px}}
+
+/* Financial dossier: legible provenance and identifiers */
+.o45-dossier-id,.o45-lead-id{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0 4px;font:650 11px/1.5 Inter,system-ui,sans-serif;color:#c6d6df}
+.o45-dossier-id>span,.o45-lead-id>span{border-bottom:1px solid #856d77;padding-bottom:3px;overflow-wrap:anywhere}
+.o45-profit-row{display:flex;justify-content:space-between;gap:12px;align-items:center;border-top:1px solid #806b75;border-bottom:1px solid #806b75;padding:13px 0;margin-bottom:14px}
+.o45-profit-row small{font-size:10px;letter-spacing:1.2px;color:#d8c9c3;font-weight:800}
+.o45-profit-row strong{font-size:19px;font-variant-numeric:tabular-nums;font-weight:750;color:#f2ebe2}
+.o45-source-note+.o45-source-note{margin-top:8px}
