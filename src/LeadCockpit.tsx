@@ -13,15 +13,14 @@ const buildDraft=(lead:Lead)=>Object.fromEntries(fields.map(k=>[k,value(lead[k])
 export default function LeadCockpit({lead,language,owner,onRefresh}:{lead:Lead;language:Lang;owner:boolean;onRefresh:()=>Promise<void>}){
  const sv=language==='sv';
  const [note,setNote]=useState(value(lead.notes)),[savedNote,setSavedNote]=useState(value(lead.notes));
- const [editing,setEditing]=useState(false),[draft,setDraft]=useState(()=>buildDraft(lead));
+ const [editing,setEditing]=useState(false),[verifiedNow,setVerifiedNow]=useState(false),[draft,setDraft]=useState(()=>buildDraft(lead));
  const [status,setStatus]=useState(''),[statusType,setStatusType]=useState<'success'|'error'|''>(''),[saving,setSaving]=useState(false);
- useEffect(()=>{setNote(value(lead.notes));setSavedNote(value(lead.notes));setDraft(buildDraft(lead));setStatus('');setEditing(false)},[lead.id]);
+ useEffect(()=>{setNote(value(lead.notes));setSavedNote(value(lead.notes));setDraft(buildDraft(lead));setStatus('');setEditing(false);setVerifiedNow(false)},[lead.id]);
  const prior=lead.revenue_previous===null||lead.revenue_previous===undefined?null:Number(lead.revenue_previous);
  const latest=lead.revenue_latest===null||lead.revenue_latest===undefined?null:Number(lead.revenue_latest);
  const change=prior!==null&&prior>0&&latest!==null?(latest-prior)/prior*100:null;
  const link=safeUrl(lead.website_url);
  const source=safeUrl(lead.financial_source_url);
- const verified=value(lead.company_verified_at||lead.financial_checked_at);
  const setField=(field:Field,next:string)=>setDraft(prev=>({...prev,[field]:next}));
  async function saveNotes(){
   if(!supabase||saving||note===savedNote)return;
@@ -44,12 +43,13 @@ export default function LeadCockpit({lead,language,owner,onRefresh}:{lead:Lead;l
   if((latestNum!==null&&!Number.isFinite(latestNum))||(prevNum!==null&&!Number.isFinite(prevNum))||(profitNum!==null&&!Number.isFinite(profitNum))){
     setStatus(sv?'Ange giltiga belopp.':'Enter valid financial numbers.');setStatusType('error');return;
   }
+  if(verifiedNow&&!safeUrl(draft.financial_source_url)&&!safeUrl(draft.website_url)){setStatus(sv?'Verifiering kräver en giltig källänk.':'Verification requires a valid source URL.');setStatusType('error');return}
   if(draft.website_url.trim()&&!safeUrl(draft.website_url)){setStatus(sv?'Ange en giltig webbadress inklusive https://':'Enter a valid website URL including https://');setStatusType('error');return}
   setSaving(true);setStatus('');
-  const payload={company_summary:draft.company_summary||null,business_focus:draft.business_focus||null,business_model:draft.business_model||null,website_url:draft.website_url||null,revenue_latest:latestNum,revenue_previous:prevNum,financial_year:year,financial_source_url:draft.financial_source_url||null,profit_latest:profitNum,organization_number:draft.organization_number||null,company_city:draft.company_city||null,company_data_origin:draft.company_data_origin||null,company_verified_at:draft.company_data_origin?new Date().toISOString():null,financial_checked_at:(latestNum!==null||prevNum!==null||profitNum!==null)?new Date().toISOString():null};
+  const payload={company_summary:draft.company_summary||null,business_focus:draft.business_focus||null,business_model:draft.business_model||null,website_url:draft.website_url||null,revenue_latest:latestNum,revenue_previous:prevNum,financial_year:year,financial_source_url:draft.financial_source_url||null,profit_latest:profitNum,organization_number:draft.organization_number||null,company_city:draft.company_city||null,company_data_origin:draft.company_data_origin||null,company_verified_at:verifiedNow?new Date().toISOString():null,financial_checked_at:(latestNum!==null||prevNum!==null||profitNum!==null)?new Date().toISOString():null};
   const {data,error}=await supabase.from('leads').update(payload).eq('id',lead.id).select('id').maybeSingle();
   if(error||!data){setStatus((sv?'Företagsuppgifter sparades inte: ':'Company details were not saved: ')+(error?.message||'No confirmed database update'));setStatusType('error')}
-  else{setEditing(false);setStatus(sv?'Företagsuppgifterna är sparade.':'Company information saved.');setStatusType('success');await onRefresh()}
+  else{setEditing(false);setVerifiedNow(false);setStatus(sv?'Företagsuppgifterna är sparade.':'Company information saved.');setStatusType('success');await onRefresh()}
   setSaving(false);
  }
  return <div className="o45-cockpit">
@@ -63,6 +63,7 @@ export default function LeadCockpit({lead,language,owner,onRefresh}:{lead:Lead;l
     <div className="o45-edit-grid"><label>{sv?'Organisationsnummer':'Company registration number'}<input value={draft.organization_number} onChange={e=>setField('organization_number',e.target.value)} /></label><label>{sv?'Ort / plats':'City / location'}<input value={draft.company_city} onChange={e=>setField('company_city',e.target.value)} /></label></div>
     <div className="o45-edit-grid"><label>{sv?'Årets resultat (SEK)':'Annual profit / loss (SEK)'}<input type="number" value={draft.profit_latest} onChange={e=>setField('profit_latest',e.target.value)} /></label><label>{sv?'Företagsuppgifternas källa':'Company data origin'}<select value={draft.company_data_origin} onChange={e=>setField('company_data_origin',e.target.value)}><option value="">{sv?'Ej angiven':'Not specified'}</option><option value="official_website">{sv?'Officiell webbplats':'Official website'}</option><option value="registry">{sv?'Företagsregister':'Business registry'}</option><option value="client_provided">{sv?'Uppgift från kunden':'Client provided'}</option><option value="internal_assessment">{sv?'Intern bedömning':'Internal assessment'}</option></select></label></div>
     <div className="o45-edit-grid"><label>{sv?'Räkenskapsår':'Financial year'}<input type="number" min="1990" max="2100" value={draft.financial_year} onChange={e=>setField('financial_year',e.target.value)}/></label><label>{sv?'Källänk (t.ex. Allabolag)':'Source URL (e.g. Allabolag)'}<input type="url" placeholder="https://…" value={draft.financial_source_url} onChange={e=>setField('financial_source_url',e.target.value)}/></label></div>
+    <label className="o45-verify-check"><input type="checkbox" checked={verifiedNow} onChange={e=>setVerifiedNow(e.target.checked)} />{sv?'Jag har kontrollerat uppgifterna mot angiven källa':'I checked the details against the stated source'}</label>
     <button className="o45-action" type="button" disabled={saving} onClick={()=>void saveProfile()}>{saving?(sv?'Sparar…':'Saving…'):(sv?'Spara företagsprofil':'Save company profile')}</button>
    </div>:<>
     <div className="o45-tags"><span>{value(lead.business_model)|| (sv?'B2B / B2C ej verifierat':'B2B / B2C unknown')}</span><span>{value(lead.industry_category)||value(lead.industry)|| (sv?'Bransch saknas':'No industry')}</span></div>
@@ -74,7 +75,7 @@ export default function LeadCockpit({lead,language,owner,onRefresh}:{lead:Lead;l
      <div><small>{sv?'FÖRÄNDRING':'CHANGE'}</small><strong className={change===null?'':change>=0?'o45-pos':'o45-neg'}>{change===null?'—':(change>0?'+':'')+change.toFixed(1)+'%'}</strong></div>
     </div>
     <div className="o45-profit-row"><small>{sv?'RESULTAT':'ANNUAL PROFIT / LOSS'} ({value(lead.financial_year)||'—'})</small><strong>{money(lead.profit_latest)||'—'}</strong></div><div className="o45-sources">{link?<a href={link} target="_blank" rel="noopener noreferrer">{sv?'Besök företagets webbplats ↗':'Open company website ↗'}</a>:<span>{sv?'Webbplats saknas':'No website recorded'}</span>}{source&&<a href={source} target="_blank" rel="noopener noreferrer">{sv?'Ekonomikälla ↗':'Financial source ↗'}</a>}</div>
-    <small className="o45-source-note">{sv?'Uppgiftskälla':'Data origin'}: {value(lead.company_data_origin)||'—'} · {sv?'Kontrollerad':'Checked'}: {verified?new Date(verified).toLocaleDateString(sv?'sv-SE':'en-GB'):'—'}</small><small className="o45-source-note">{sv?'Ekonomiska siffror visas endast när de lagts in med källänk och räkenskapsår.':'Financial figures are displayed only when entered with a source and reporting year.'}</small>
+    <small className="o45-source-note">{sv?'Uppgiftskälla':'Data origin'}: {value(lead.company_data_origin)||'—'} · {sv?'Verifierad':'Verified'}: {lead.company_verified_at?new Date(value(lead.company_verified_at)).toLocaleDateString(sv?'sv-SE':'en-GB'):'—'} · {sv?'Ekonomidata uppdaterad':'Financial data updated'}: {lead.financial_checked_at?new Date(value(lead.financial_checked_at)).toLocaleDateString(sv?'sv-SE':'en-GB'):'—'}</small><small className="o45-source-note">{sv?'Ekonomiska siffror visas endast när de lagts in med källänk och räkenskapsår.':'Financial figures are displayed only when entered with a source and reporting year.'}</small>
    </>}
   </section>
   <section className="o45-notepad" aria-label={sv?'Anteckningar':'Notes'}>
