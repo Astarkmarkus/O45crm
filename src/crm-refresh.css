@@ -314,3 +314,15 @@ main>header>*{min-width:0}
  .crm-action-row>*{flex:1 1 135px;text-align:center}
  .crm-info-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
+
+/* Project workspace selector and access controls */
+.header-workspace-controls{display:flex;align-items:center;justify-content:flex-end;gap:12px;min-width:0;max-width:100%;flex:1 1 auto}
+.active-project-control{display:flex;align-items:center;gap:9px;min-width:0;max-width:min(520px,65vw);font-size:11px;line-height:1.35;color:var(--o45-text-secondary);font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+.active-project-control select{width:auto;min-width:190px;max-width:100%;padding:8px 30px 8px 11px;font-size:12px;text-transform:none;letter-spacing:0;border-radius:4px}
+.locked-project-label{display:inline-flex;align-items:center;max-width:100%;padding:8px 11px;border:1px solid var(--o45-border);background:var(--o45-panel);color:var(--o45-text-secondary);font-size:12px}
+.team-project{min-width:0;max-width:100%;padding:16px;margin:12px 0;border:1px solid var(--o45-border);background:var(--o45-panel-raised)}
+.team-project label{display:grid;gap:7px;margin:12px 0;color:var(--o45-text-secondary);font-size:12px}
+.team-project select[multiple]{min-height:90px;padding:8px}
+.team-project select[multiple] option{padding:6px}
+.team-project select:not([multiple]){max-width:100%}
+@media(max-width:750px){.header-workspace-controls{width:100%;justify-content:space-between;flex-wrap:wrap}.active-project-control{flex:1 1 100%;max-width:100%;justify-content:space-between}.active-project-control select{flex:1;min-width:0}.locked-project-label{flex:1}.team-project{padding:12px}}
