@@ -59,7 +59,7 @@ async function save(e:FormEvent){
   if(k==='assigned_to'&&!v)v=view==='CRM'?null:session?.user.id??null;
   payload[k]=v;
  }
- if(!edit?.id&&['CRM','Meetings','Tasks'].includes(view))payload.project_id=activeProjectId||null;
+ if(!edit?.id&&['CRM','Meetings','Tasks'].includes(view)&&!('project_id' in payload))payload.project_id=activeProjectId||null;
  if(view==='CRM'){
   const hasRevenue=payload.revenue_latest!==null||payload.revenue_previous!==null||payload.profit_latest!==null;
   if(hasRevenue&&(!payload.financial_year||!String(payload.financial_source_url||'').startsWith('https://'))){setError('Financial values require reporting year and HTTPS source URL.');return}
